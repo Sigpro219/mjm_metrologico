@@ -42,7 +42,7 @@ export default function Home() {
             }}>
                 {/* Badge ISO — esquina superior derecha */}
                 <div style={{
-                    position: 'absolute', top: '100px', right: '5%',
+                    position: 'absolute', top: '150px', right: '5%',
                     backgroundColor: 'white', borderRadius: '12px',
                     padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px',
                     boxShadow: '0 4px 20px rgba(0,0,0,0.2)', zIndex: 20
