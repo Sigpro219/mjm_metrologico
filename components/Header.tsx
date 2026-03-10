@@ -36,7 +36,7 @@ export function Header() {
                 transition: 'all 0.4s', 
                 display: 'block'
             }}>
-                <Logo height={scrolled ? 36 : 44} />
+                <Logo height={scrolled ? 46 : 57} />
             </a>
             
             <div style={{ 

@@ -5,7 +5,7 @@ export const Logo: React.FC<{
     height?: number,
     showName?: boolean,
     style?: React.CSSProperties
-}> = ({ className, height = 44, showName = true, style }) => {
+}> = ({ className, height = 57, showName = true, style }) => {
     return (
         <div className={`logo-container ${className ?? ''}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', ...style }}>
             <img
@@ -15,8 +15,8 @@ export const Logo: React.FC<{
             />
             {showName && (
                 <span style={{
-                    fontWeight: 800,
-                    fontSize: '1.05rem',
+                    fontWeight: 400,
+                    fontSize: '1.37rem',
                     lineHeight: 1.2,
                     color: 'var(--mjm-blue)',
                     letterSpacing: '-0.3px',
