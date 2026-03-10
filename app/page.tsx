@@ -30,14 +30,14 @@ export default function Home() {
         <div style={{ backgroundColor: '#fafafa' }}>
             {/* Modern Hero Section */}
             <section style={{
-                minHeight: '90vh',
+                minHeight: '100vh',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 background: 'linear-gradient(135deg, rgba(13, 27, 42, 0.95) 0%, rgba(27, 54, 93, 0.9) 100%), url("https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80") no-repeat center center/cover',
                 color: 'white',
                 textAlign: 'center',
-                padding: '0 20px',
+                padding: '100px 20px 60px 20px',
                 position: 'relative',
                 overflow: 'hidden'
             }}>
