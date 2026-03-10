@@ -1,11 +1,14 @@
 :root {
-  --mjm-orange: #F58220;
-  --mjm-blue: #1B365D;
-  --mjm-white: #FFFFFF;
-  --mjm-gray: #F4F4F4;
-  --mjm-dark-blue: #0D1B2A;
+  --mjm-orange: #f7931b;
+  --mjm-blue: #2f423e;
+  --mjm-accent: #639bb3;
+  --mjm-white: #ffffff;
+  --mjm-gray: #f4f4f4;
+  --mjm-dark-blue: #2f423e;
 
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 * {
@@ -33,7 +36,11 @@ button {
 }
 
 .premium-gradient {
-  background: linear-gradient(135deg, var(--mjm-blue) 0%, var(--mjm-dark-blue) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--mjm-blue) 0%,
+    var(--mjm-dark-blue) 100%
+  );
 }
 
 .text-orange {
@@ -52,7 +59,9 @@ button {
   color: white;
   border: none;
   font-weight: 600;
-  transition: transform 0.2s, background-color 0.2s;
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
 }
 
 .btn-primary:hover {
