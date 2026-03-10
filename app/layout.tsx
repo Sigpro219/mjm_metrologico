@@ -17,7 +17,7 @@ export default function RootLayout({
         <html lang="es">
             <body>
                 <Header />
-                <main style={{ marginTop: '140px' }}>
+                <main style={{ marginTop: '110px' }}>
                     {children}
                 </main>
                 <footer style={{

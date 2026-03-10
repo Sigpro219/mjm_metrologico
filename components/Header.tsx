@@ -21,7 +21,7 @@ export function Header() {
             position: 'fixed',
             top: 0,
             width: '100%',
-            padding: scrolled ? '15px 40px' : '25px 40px',
+            padding: scrolled ? '10px 40px' : '15px 40px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -34,11 +34,11 @@ export function Header() {
         }}>
             <a href="/" style={{ 
                 transition: 'transform 0.4s', 
-                transform: scrolled ? 'scale(0.8)' : 'scale(1)', 
+                transform: scrolled ? 'scale(0.9)' : 'scale(1)', 
                 transformOrigin: 'left center',
                 display: 'block'
             }}>
-                <Logo width={160} height={160} />
+                <Logo width={100} height={100} />
             </a>
             
             <div style={{ 
