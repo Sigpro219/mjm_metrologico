@@ -25,12 +25,12 @@ export function Header() {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: scrolled ? 'blur(12px)' : 'blur(5px)',
+            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            backdropFilter: scrolled ? 'blur(12px) saturate(180%)' : 'none',
             zIndex: 1000,
-            boxShadow: scrolled ? '0 4px 30px rgba(0, 0, 0, 0.08)' : '0 2px 10px rgba(0,0,0,0.05)',
+            boxShadow: scrolled ? '0 2px 20px rgba(0, 0, 0, 0.08)' : '0 1px 0 rgba(0,0,0,0.08)',
             transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid transparent'
+            borderBottom: '1px solid rgba(0,0,0,0.06)'
         }}>
             <a href="/" style={{ 
                 transition: 'all 0.4s', 
