@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Shield, BookOpen, Settings, ArrowRight, CheckCircle2, MonitorSmartphone, CloudCog, ActivitySquare } from 'lucide-react'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
+import { Logo } from '@/components/Logo'
 
 export default function Home() {
     const [teamImage, setTeamImage] = useState('/about/team-cimga.jpg')
@@ -97,7 +98,7 @@ export default function Home() {
                         flex: '0 1 340px', display: 'flex', flexDirection: 'column',
                         alignItems: 'center', gap: '30px'
                     }}>
-                        {/* Logo grande */}
+                        {/* Logo igual que el header */}
                         <div style={{
                             backgroundColor: 'rgba(255,255,255,0.12)',
                             backdropFilter: 'blur(10px)',
@@ -107,10 +108,7 @@ export default function Home() {
                             boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
                             display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px'
                         }}>
-                            <img src="/logo1.png" alt="Logo MJM" style={{ height: '90px', width: 'auto' }} />
-                            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.5px', textAlign: 'center', lineHeight: 1.4 }}>
-                                ASESORIAS INTEGRALES <span style={{ color: 'var(--mjm-orange)' }}>MJM S.A.S</span>
-                            </span>
+                            <Logo height={80} nameColor="white" />
                         </div>
 
                         {/* Sello ISO 9001 */}
