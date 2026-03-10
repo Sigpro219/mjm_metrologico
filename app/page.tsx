@@ -47,11 +47,7 @@ export default function Home() {
                     padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px',
                     boxShadow: '0 4px 20px rgba(0,0,0,0.2)', zIndex: 20
                 }}>
-                    <img src="/about/certification.jpg" alt="ISO 9001" style={{ height: '36px', width: '36px', objectFit: 'cover', borderRadius: '6px' }} />
-                    <div>
-                        <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>Certificación</div>
-                        <div style={{ fontSize: '0.95rem', color: 'var(--mjm-blue)', fontWeight: 800, lineHeight: 1 }}>ISO 9001</div>
-                    </div>
+                    <img src="/about/icontec-badge.png" alt="Certificación ISO 9001 ICONTEC" style={{ height: '56px', width: 'auto' }} />
                 </div>
 
                 {/* Logo circular grande — esquina inferior derecha (decorativo) */}
