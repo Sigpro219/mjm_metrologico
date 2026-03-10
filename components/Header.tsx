@@ -8,67 +8,82 @@ export function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
+            setScrolled(window.scrollY > 30);
         };
         window.addEventListener('scroll', handleScroll);
-        // Disparar una vez al montar para chequear el estado inicial
         handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // En la parte superior → transparente, texto blanco
+    // Al scrollear → vidrio blanco, texto azul corporativo
+    const linkColor = scrolled ? 'var(--mjm-blue)' : 'rgba(255,255,255,0.92)';
+    const linkHoverColor = 'var(--mjm-orange)';
+    const linkHoverRestore = scrolled ? 'var(--mjm-blue)' : 'rgba(255,255,255,0.92)';
 
     return (
         <nav style={{
             position: 'fixed',
             top: 0,
             width: '100%',
-            padding: scrolled ? '6px 40px' : '8px 40px',
+            padding: scrolled ? '6px 40px' : '18px 40px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: 'rgba(255, 255, 255, 0.98)',
-            backdropFilter: scrolled ? 'blur(12px) saturate(180%)' : 'none',
+            backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.92)' : 'transparent',
+            backdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
+            WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
             zIndex: 1000,
-            boxShadow: scrolled ? '0 2px 20px rgba(0, 0, 0, 0.08)' : '0 1px 0 rgba(0,0,0,0.08)',
-            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            borderBottom: '1px solid rgba(0,0,0,0.06)'
+            boxShadow: scrolled ? '0 2px 20px rgba(0, 0, 0, 0.08)' : 'none',
+            borderBottom: scrolled ? '1px solid rgba(255,255,255,0.4)' : 'none',
+            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
         }}>
-            <a href="/" style={{ 
-                transition: 'all 0.4s', 
-                display: 'block'
-            }}>
-                <Logo height={scrolled ? 60 : 74} />
+            <a href="/" style={{ transition: 'all 0.4s', display: 'block' }}>
+                <Logo height={scrolled ? 60 : 74} nameColor={scrolled ? 'var(--mjm-blue)' : 'white'} />
             </a>
-            
-            <div style={{ 
-                display: 'flex', 
-                gap: '35px', 
+
+            <div style={{
+                display: 'flex',
+                gap: '35px',
                 fontWeight: 600,
                 alignItems: 'center',
-                color: 'var(--mjm-blue)'
+                color: linkColor
             }}>
-                <a href="/" style={{ transition: 'color 0.2s', padding: '5px 0' }} onMouseOver={e => e.currentTarget.style.color = 'var(--mjm-orange)'} onMouseOut={e => e.currentTarget.style.color = 'var(--mjm-blue)'}>Inicio</a>
-                <a href="/servicios" style={{ transition: 'color 0.2s', padding: '5px 0' }} onMouseOver={e => e.currentTarget.style.color = 'var(--mjm-orange)'} onMouseOut={e => e.currentTarget.style.color = 'var(--mjm-blue)'}>Servicios</a>
-                <a href="/nosotros" style={{ transition: 'color 0.2s', padding: '5px 0' }} onMouseOver={e => e.currentTarget.style.color = 'var(--mjm-orange)'} onMouseOut={e => e.currentTarget.style.color = 'var(--mjm-blue)'}>Nosotros</a>
-                <a href="/contacto" style={{ transition: 'color 0.2s', padding: '5px 0' }} onMouseOver={e => e.currentTarget.style.color = 'var(--mjm-orange)'} onMouseOut={e => e.currentTarget.style.color = 'var(--mjm-blue)'}>Contacto</a>
-                <a 
-                    href={process.env.NEXT_PUBLIC_PORTAL_URL ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/login?tenant=mjm` : 'http://localhost:3000/login?tenant=mjm'} 
-                    style={{ 
+                {['/', '/servicios', '/nosotros', '/contacto'].map((href, i) => {
+                    const labels = ['Inicio', 'Servicios', 'Nosotros', 'Contacto'];
+                    return (
+                        <a
+                            key={href}
+                            href={href}
+                            style={{ transition: 'color 0.2s', padding: '5px 0', color: linkColor }}
+                            onMouseOver={e => e.currentTarget.style.color = linkHoverColor}
+                            onMouseOut={e => e.currentTarget.style.color = linkHoverRestore}
+                        >
+                            {labels[i]}
+                        </a>
+                    );
+                })}
+
+                <a
+                    href={process.env.NEXT_PUBLIC_PORTAL_URL ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/login?tenant=mjm` : 'http://localhost:3000/login?tenant=mjm'}
+                    style={{
                         color: 'white',
                         backgroundColor: 'var(--mjm-orange)',
-                        padding: scrolled ? '10px 24px' : '12px 28px',
+                        padding: scrolled ? '10px 24px' : '11px 26px',
                         borderRadius: '30px',
                         fontWeight: 700,
                         marginLeft: '10px',
-                        boxShadow: scrolled ? '0 4px 15px rgba(245,130,32,0.3)' : '0 4px 10px rgba(245,130,32,0.2)',
-                        transition: 'all 0.3s'
+                        boxShadow: '0 4px 15px rgba(245,130,32,0.35)',
+                        transition: 'all 0.3s',
+                        display: 'inline-block'
                     }}
                     onMouseOver={e => {
-                        e.currentTarget.style.transform = 'translateY(-2px)'
-                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(245,130,32,0.4)'
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(245,130,32,0.5)';
                     }}
                     onMouseOut={e => {
-                        e.currentTarget.style.transform = 'translateY(0)'
-                        e.currentTarget.style.boxShadow = scrolled ? '0 4px 15px rgba(245,130,32,0.3)' : '0 4px 10px rgba(245,130,32,0.2)'
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(245,130,32,0.35)';
                     }}
                 >
                     Portal Operativo
