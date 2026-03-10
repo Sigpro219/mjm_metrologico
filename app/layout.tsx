@@ -34,7 +34,7 @@ export default function RootLayout({
                         <a href="/servicios">Servicios</a>
                         <a href="/nosotros">Nosotros</a>
                         <a href="/contacto">Contacto</a>
-                        <a href="/login" style={{ color: 'var(--mjm-orange)' }}>Admin</a>
+                        <a href={process.env.NEXT_PUBLIC_PORTAL_URL ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/login?tenant=mjm` : 'http://localhost:3000/login?tenant=mjm'} style={{ color: 'var(--mjm-orange)' }}>Admin</a>
                     </div>
                 </nav>
                 <main style={{ marginTop: '220px' }}>
