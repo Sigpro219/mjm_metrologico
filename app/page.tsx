@@ -43,11 +43,21 @@ export default function Home() {
                 {/* Badge ISO — esquina superior derecha */}
                 <div style={{
                     position: 'absolute', top: '150px', right: '5%',
-                    backgroundColor: 'white', borderRadius: '12px',
-                    padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.2)', zIndex: 20
+                    backgroundColor: 'rgba(255,255,255,0.92)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    borderRadius: '14px',
+                    padding: '14px 20px',
+                    display: 'flex', alignItems: 'center', gap: '14px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+                    border: '1px solid rgba(255,255,255,0.6)',
+                    zIndex: 20
                 }}>
-                    <img src="/about/icontec-badge.png" alt="Certificación ISO 9001 ICONTEC" style={{ height: '56px', width: 'auto' }} />
+                    <img src="/about/icontec-badge.png" alt="ICONTEC" style={{ height: '52px', width: 'auto' }} />
+                    <div>
+                        <div style={{ fontSize: '1rem', color: '#2f423e', fontWeight: 700, lineHeight: 1.2 }}>Certificación</div>
+                        <div style={{ fontSize: '1.3rem', color: '#f7931b', fontWeight: 800, lineHeight: 1.1 }}>ISO 9001</div>
+                    </div>
                 </div>
 
                 {/* Logo circular grande — esquina inferior derecha (decorativo) */}
