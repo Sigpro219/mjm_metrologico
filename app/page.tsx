@@ -34,7 +34,7 @@ export default function Home() {
                 minHeight: '100vh',
                 display: 'flex',
                 alignItems: 'center',
-                background: 'linear-gradient(135deg, rgba(13,27,42,0.88) 0%, rgba(27,54,93,0.80) 100%), url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80") no-repeat center center/cover',
+                background: 'linear-gradient(135deg, rgba(47,66,62,0.88) 0%, rgba(99,155,179,0.75) 100%), url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80") no-repeat center center/cover',
                 color: 'white',
                 padding: '120px 6% 80px 6%',
                 position: 'relative',
