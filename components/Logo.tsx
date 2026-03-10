@@ -10,7 +10,7 @@ export const Logo: React.FC<{
     return (
         <div className={`logo-container ${className}`} style={{ display: 'flex', alignItems: 'center', ...style }}>
             <Image
-                src="/logo.png"
+                src="/logo1.png"
                 alt="MJM Logo"
                 width={width}
                 height={height}
