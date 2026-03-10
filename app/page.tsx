@@ -29,107 +29,71 @@ export default function Home() {
 
     return (
         <div style={{ backgroundColor: '#fafafa' }}>
-            {/* Hero Section - Layout 2 columnas, fiel a la identidad del cliente */}
+            {/* Hero - fiel al diseño del cliente */}
             <section style={{
                 minHeight: '100vh',
                 display: 'flex',
                 alignItems: 'center',
-                background: 'linear-gradient(135deg, rgba(13, 27, 42, 0.92) 0%, rgba(27, 54, 93, 0.85) 60%, rgba(13, 27, 42, 0.75) 100%), url("/about/banner.jpg") no-repeat center center/cover',
+                background: 'linear-gradient(135deg, rgba(13,27,42,0.88) 0%, rgba(27,54,93,0.80) 100%), url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80") no-repeat center center/cover',
                 color: 'white',
-                padding: '100px 5% 60px 5%',
+                padding: '120px 6% 80px 6%',
                 position: 'relative',
                 overflow: 'hidden'
             }}>
-                {/* Glow decorativo izquierdo */}
+                {/* Badge ISO — esquina superior derecha */}
                 <div style={{
-                    position: 'absolute',
-                    bottom: '-10%', left: '-5%', width: '500px', height: '500px',
-                    background: 'radial-gradient(circle, rgba(245,130,32,0.12) 0%, transparent 70%)',
-                    borderRadius: '50%', filter: 'blur(60px)', pointerEvents: 'none'
-                }}></div>
-
-                {/* Contenedor principal en dos columnas */}
-                <div style={{
-                    maxWidth: '1280px', margin: '0 auto', width: '100%',
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    gap: '60px', flexWrap: 'wrap', zIndex: 10, position: 'relative'
+                    position: 'absolute', top: '100px', right: '5%',
+                    backgroundColor: 'white', borderRadius: '12px',
+                    padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.2)', zIndex: 20
                 }}>
-
-                    {/* Columna izquierda – Texto */}
-                    <div style={{ flex: '1 1 480px', maxWidth: '600px' }}>
-                        <div style={{
-                            display: 'inline-block', padding: '7px 16px', backgroundColor: 'rgba(245,130,32,0.2)',
-                            border: '1px solid rgba(245,130,32,0.5)', borderRadius: '30px', color: '#fca311',
-                            fontWeight: 600, fontSize: '0.85rem', marginBottom: '28px', letterSpacing: '1px'
-                        }}>
-                            CERTIFICADOS ISO 9001:2015
-                        </div>
-
-                        <h1 style={{ fontSize: '3.8rem', marginBottom: '20px', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-1px' }}>
-                            <span dangerouslySetInnerHTML={{ __html: heroTitle.replace('Aseguramiento Metrológico', '<span style="color: var(--mjm-orange);">Aseguramiento Metrológico</span>') }} />
-                        </h1>
-
-                        <p style={{ fontSize: '1.15rem', marginBottom: '40px', opacity: 0.88, lineHeight: 1.7, maxWidth: '520px' }}>
-                            {heroSubtitle}
-                        </p>
-
-                        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                            <a href="#saas" className="btn-primary" style={{
-                                padding: '15px 32px', fontSize: '1rem', boxShadow: '0 10px 25px rgba(245,130,32,0.4)',
-                                display: 'inline-flex', alignItems: 'center', borderRadius: '12px'
-                            }}>
-                                Nuestro Portal Digital <ArrowRight size={18} style={{ marginLeft: '10px' }} />
-                            </a>
-                            <a href="/contacto" style={{
-                                padding: '15px 32px', fontSize: '1rem', borderRadius: '12px',
-                                border: '1.5px solid rgba(255,255,255,0.4)', backgroundColor: 'rgba(255,255,255,0.07)',
-                                color: 'white', fontWeight: 600, transition: 'all 0.3s'
-                            }}
-                                onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)'}
-                                onMouseOut={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.07)'}
-                            >
-                                Contáctanos
-                            </a>
-                        </div>
+                    <img src="/about/certification.jpg" alt="ISO 9001" style={{ height: '36px', width: '36px', objectFit: 'cover', borderRadius: '6px' }} />
+                    <div>
+                        <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>Certificación</div>
+                        <div style={{ fontSize: '0.95rem', color: 'var(--mjm-blue)', fontWeight: 800, lineHeight: 1 }}>ISO 9001</div>
                     </div>
+                </div>
 
-                    {/* Columna derecha – Logo grande + Sello ISO */}
-                    <div style={{
-                        flex: '0 1 340px', display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', gap: '30px'
-                    }}>
-                        {/* Logo igual que el header */}
-                        <div style={{
-                            backgroundColor: 'rgba(255,255,255,0.12)',
-                            backdropFilter: 'blur(10px)',
-                            borderRadius: '24px',
-                            padding: '28px 36px',
-                            border: '1px solid rgba(255,255,255,0.2)',
-                            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px'
-                        }}>
-                            <Logo height={80} nameColor="white" />
-                        </div>
+                {/* Logo circular grande — esquina inferior derecha (decorativo) */}
+                <div style={{
+                    position: 'absolute', bottom: '5%', right: '5%',
+                    opacity: 0.85, zIndex: 5
+                }}>
+                    <img src="/logo1.png" alt="MJM Logo decorativo" style={{ height: '200px', width: 'auto' }} />
+                </div>
 
-                        {/* Sello ISO 9001 */}
-                        <div style={{
-                            backgroundColor: 'rgba(255,255,255,0.95)',
-                            borderRadius: '16px',
-                            padding: '14px',
-                            boxShadow: '0 10px 30px rgba(0,0,0,0.25)',
-                            width: '160px', height: '160px',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            overflow: 'hidden'
+                {/* Texto principal — izquierda */}
+                <div style={{ maxWidth: '580px', zIndex: 10, position: 'relative' }}>
+                    <h1 style={{ fontSize: '4.2rem', fontWeight: 800, lineHeight: 1.05, marginBottom: '24px', letterSpacing: '-1px' }}>
+                        Expertos en{' '}
+                        <span style={{ color: 'var(--mjm-orange)', display: 'block' }}>
+                            Aseguramiento Metrológico
+                        </span>
+                    </h1>
+
+                    <p style={{ fontSize: '1.1rem', lineHeight: 1.7, opacity: 0.9, marginBottom: '42px', maxWidth: '460px' }}>
+                        Consultoría, capacitación, verificación y calibración de instrumentos con los más altos estándares de calidad y confiabilidad.
+                    </p>
+
+                    <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                        <a href="/contacto" className="btn-primary" style={{
+                            padding: '14px 30px', fontSize: '1rem', display: 'inline-flex',
+                            alignItems: 'center', borderRadius: '8px',
+                            boxShadow: '0 8px 20px rgba(245,130,32,0.4)'
                         }}>
-                            <img
-                                src="/about/certification.jpg"
-                                alt="Certificación ISO 9001 ICONTEC"
-                                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
-                            />
-                        </div>
-                        <p style={{ fontSize: '0.8rem', opacity: 0.7, textAlign: 'center', letterSpacing: '1px', fontWeight: 600 }}>
-                            CERTIFICADO SC-2002427
-                        </p>
+                            Contáctanos <ArrowRight size={18} style={{ marginLeft: '8px' }} />
+                        </a>
+                        <a href="/servicios" style={{
+                            padding: '14px 30px', fontSize: '1rem', borderRadius: '8px',
+                            border: '2px solid rgba(255,255,255,0.6)',
+                            backgroundColor: 'transparent', color: 'white', fontWeight: 600,
+                            transition: 'all 0.3s', display: 'inline-block'
+                        }}
+                            onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+                            onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                        >
+                            Nuestros Servicios
+                        </a>
                     </div>
                 </div>
             </section>
