@@ -21,7 +21,7 @@ export function Header() {
             position: 'fixed',
             top: 0,
             width: '100%',
-            padding: scrolled ? '10px 40px' : '15px 40px',
+            padding: scrolled ? '6px 40px' : '8px 40px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -36,7 +36,7 @@ export function Header() {
                 transition: 'all 0.4s', 
                 display: 'block'
             }}>
-                <Logo height={scrolled ? 46 : 57} />
+                <Logo height={scrolled ? 60 : 74} />
             </a>
             
             <div style={{ 
