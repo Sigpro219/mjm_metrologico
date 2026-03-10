@@ -3,18 +3,15 @@ import Image from 'next/image';
 
 export const Logo: React.FC<{
     className?: string,
-    width?: number,
     height?: number,
     style?: React.CSSProperties
-}> = ({ className, width = 120, height = 120, style }) => {
+}> = ({ className, height = 44, style }) => {
     return (
-        <div className={`logo-container ${className}`} style={{ display: 'flex', alignItems: 'center', ...style }}>
-            <Image
+        <div className={`logo-container ${className ?? ''}`} style={{ display: 'flex', alignItems: 'center', ...style }}>
+            <img
                 src="/logo1.png"
                 alt="MJM Logo"
-                width={width}
-                height={height}
-                style={{ objectFit: 'contain' }}
+                style={{ height: `${height}px`, width: 'auto', objectFit: 'contain', display: 'block' }}
             />
         </div>
     );

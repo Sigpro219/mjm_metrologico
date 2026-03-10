@@ -33,12 +33,10 @@ export function Header() {
             borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.5)' : '1px solid transparent'
         }}>
             <a href="/" style={{ 
-                transition: 'transform 0.4s', 
-                transform: scrolled ? 'scale(0.9)' : 'scale(1)', 
-                transformOrigin: 'left center',
+                transition: 'all 0.4s', 
                 display: 'block'
             }}>
-                <Logo width={100} height={100} />
+                <Logo height={scrolled ? 36 : 44} />
             </a>
             
             <div style={{ 

@@ -17,7 +17,7 @@ export default function RootLayout({
         <html lang="es">
             <body>
                 <Header />
-                <main style={{ marginTop: '110px' }}>
+                <main style={{ marginTop: '75px' }}>
                     {children}
                 </main>
                 <footer style={{
@@ -26,7 +26,7 @@ export default function RootLayout({
                     padding: '60px 20px',
                     textAlign: 'center'
                 }}>
-                    <Logo className="footer-logo" width={220} height={220} style={{ margin: '0 auto' }} />
+                    <Logo className="footer-logo" height={80} style={{ margin: '0 auto', justifyContent: 'center' }} />
                     <p style={{ marginTop: '20px', opacity: 0.8 }}>
                         © {new Date().getFullYear()} Asesorías Integrales MJM S.A.S. Todos los derechos reservados.
                     </p>
