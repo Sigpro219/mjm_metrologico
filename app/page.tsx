@@ -28,58 +28,110 @@ export default function Home() {
 
     return (
         <div style={{ backgroundColor: '#fafafa' }}>
-            {/* Modern Hero Section */}
+            {/* Hero Section - Layout 2 columnas, fiel a la identidad del cliente */}
             <section style={{
                 minHeight: '100vh',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                background: 'linear-gradient(135deg, rgba(13, 27, 42, 0.95) 0%, rgba(27, 54, 93, 0.9) 100%), url("https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80") no-repeat center center/cover',
+                background: 'linear-gradient(135deg, rgba(13, 27, 42, 0.92) 0%, rgba(27, 54, 93, 0.85) 60%, rgba(13, 27, 42, 0.75) 100%), url("/about/banner.jpg") no-repeat center center/cover',
                 color: 'white',
-                textAlign: 'center',
-                padding: '100px 20px 60px 20px',
+                padding: '100px 5% 60px 5%',
                 position: 'relative',
                 overflow: 'hidden'
             }}>
+                {/* Glow decorativo izquierdo */}
                 <div style={{
                     position: 'absolute',
-                    top: '-20%', left: '-10%', width: '500px', height: '500px',
-                    background: 'radial-gradient(circle, rgba(245,130,32,0.15) 0%, transparent 70%)',
-                    borderRadius: '50%', filter: 'blur(60px)'
+                    bottom: '-10%', left: '-5%', width: '500px', height: '500px',
+                    background: 'radial-gradient(circle, rgba(245,130,32,0.12) 0%, transparent 70%)',
+                    borderRadius: '50%', filter: 'blur(60px)', pointerEvents: 'none'
                 }}></div>
 
-                <div style={{ maxWidth: '1000px', zIndex: 10, animation: 'fadeInUp 1s ease-out' }}>
-                    <div style={{
-                        display: 'inline-block', padding: '8px 16px', backgroundColor: 'rgba(245,130,32,0.2)',
-                        border: '1px solid rgba(245,130,32,0.5)', borderRadius: '30px', color: '#fca311',
-                        fontWeight: 600, fontSize: '0.9rem', marginBottom: '30px', letterSpacing: '1px'
-                    }}>
-                        NUEVO: PORTAL SaaS DE METROLOGÍA
+                {/* Contenedor principal en dos columnas */}
+                <div style={{
+                    maxWidth: '1280px', margin: '0 auto', width: '100%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    gap: '60px', flexWrap: 'wrap', zIndex: 10, position: 'relative'
+                }}>
+
+                    {/* Columna izquierda – Texto */}
+                    <div style={{ flex: '1 1 480px', maxWidth: '600px' }}>
+                        <div style={{
+                            display: 'inline-block', padding: '7px 16px', backgroundColor: 'rgba(245,130,32,0.2)',
+                            border: '1px solid rgba(245,130,32,0.5)', borderRadius: '30px', color: '#fca311',
+                            fontWeight: 600, fontSize: '0.85rem', marginBottom: '28px', letterSpacing: '1px'
+                        }}>
+                            CERTIFICADOS ISO 9001:2015
+                        </div>
+
+                        <h1 style={{ fontSize: '3.8rem', marginBottom: '20px', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-1px' }}>
+                            <span dangerouslySetInnerHTML={{ __html: heroTitle.replace('Aseguramiento Metrológico', '<span style="color: var(--mjm-orange);">Aseguramiento Metrológico</span>') }} />
+                        </h1>
+
+                        <p style={{ fontSize: '1.15rem', marginBottom: '40px', opacity: 0.88, lineHeight: 1.7, maxWidth: '520px' }}>
+                            {heroSubtitle}
+                        </p>
+
+                        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                            <a href="#saas" className="btn-primary" style={{
+                                padding: '15px 32px', fontSize: '1rem', boxShadow: '0 10px 25px rgba(245,130,32,0.4)',
+                                display: 'inline-flex', alignItems: 'center', borderRadius: '12px'
+                            }}>
+                                Nuestro Portal Digital <ArrowRight size={18} style={{ marginLeft: '10px' }} />
+                            </a>
+                            <a href="/contacto" style={{
+                                padding: '15px 32px', fontSize: '1rem', borderRadius: '12px',
+                                border: '1.5px solid rgba(255,255,255,0.4)', backgroundColor: 'rgba(255,255,255,0.07)',
+                                color: 'white', fontWeight: 600, transition: 'all 0.3s'
+                            }}
+                                onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)'}
+                                onMouseOut={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.07)'}
+                            >
+                                Contáctanos
+                            </a>
+                        </div>
                     </div>
 
-                    <h1 style={{ fontSize: '4.5rem', marginBottom: '25px', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-1px' }}>
-                        <span dangerouslySetInnerHTML={{ __html: heroTitle.replace('Aseguramiento Metrológico', '<span style="color: var(--mjm-orange); text-shadow: 0 4px 20px rgba(245,130,32,0.3);">Aseguramiento Metrológico</span>') }} />
-                    </h1>
-                    <p style={{ fontSize: '1.4rem', marginBottom: '50px', opacity: 0.9, lineHeight: 1.6, maxWidth: '800px', margin: '0 auto 50px auto' }}>
-                        {heroSubtitle}
-                    </p>
-                    <div style={{ display: 'flex', gap: '25px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <a href="#saas" className="btn-primary" style={{
-                            padding: '16px 36px', fontSize: '1.1rem', boxShadow: '0 10px 25px rgba(245,130,32,0.4)',
-                            display: 'inline-flex', alignItems: 'center'
+                    {/* Columna derecha – Logo grande + Sello ISO */}
+                    <div style={{
+                        flex: '0 1 340px', display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', gap: '30px'
+                    }}>
+                        {/* Logo grande */}
+                        <div style={{
+                            backgroundColor: 'rgba(255,255,255,0.12)',
+                            backdropFilter: 'blur(10px)',
+                            borderRadius: '24px',
+                            padding: '28px 36px',
+                            border: '1px solid rgba(255,255,255,0.2)',
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px'
                         }}>
-                            Tu Metrología Digital <ArrowRight size={20} style={{ marginLeft: '12px' }} />
-                        </a>
-                        <a href="/servicios" style={{
-                            padding: '16px 36px', fontSize: '1.1rem', borderRadius: '12px',
-                            border: '1px solid rgba(255,255,255,0.3)', backgroundColor: 'rgba(255,255,255,0.05)',
-                            color: 'white', fontWeight: 600, backdropFilter: 'blur(10px)', transition: 'all 0.3s'
-                        }}
-                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
-                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'}
-                        >
-                            Nuestros Servicios
-                        </a>
+                            <img src="/logo1.png" alt="Logo MJM" style={{ height: '90px', width: 'auto' }} />
+                            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.5px', textAlign: 'center', lineHeight: 1.4 }}>
+                                ASESORIAS INTEGRALES <span style={{ color: 'var(--mjm-orange)' }}>MJM S.A.S</span>
+                            </span>
+                        </div>
+
+                        {/* Sello ISO 9001 */}
+                        <div style={{
+                            backgroundColor: 'rgba(255,255,255,0.95)',
+                            borderRadius: '16px',
+                            padding: '14px',
+                            boxShadow: '0 10px 30px rgba(0,0,0,0.25)',
+                            width: '160px', height: '160px',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            overflow: 'hidden'
+                        }}>
+                            <img
+                                src="/about/certification.jpg"
+                                alt="Certificación ISO 9001 ICONTEC"
+                                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
+                            />
+                        </div>
+                        <p style={{ fontSize: '0.8rem', opacity: 0.7, textAlign: 'center', letterSpacing: '1px', fontWeight: 600 }}>
+                            CERTIFICADO SC-2002427
+                        </p>
                     </div>
                 </div>
             </section>
