@@ -1,15 +1,130 @@
 'use client';
 
 import { useEffect, useState } from 'react'
-import { Shield, BookOpen, Settings, ArrowRight, CheckCircle2, MonitorSmartphone, CloudCog, ActivitySquare } from 'lucide-react'
+import { 
+    Shield, MonitorSmartphone, BookOpen, Settings, ActivitySquare, ArrowRight, 
+    CheckCircle2, ChevronRight, Menu, X, Play, ShieldCheck, ClipboardCheck, 
+    Database, Calendar, BarChart3, Activity, Clock, Thermometer, Ruler, 
+    Search, Wrench, HeartPulse, Box, Briefcase, Users, BookText, 
+    GraduationCap, UserCheck 
+} from 'lucide-react';
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
-import { Logo } from '@/components/Logo'
+import { SaaSSection } from '@/components/SaaSSection'
 
 export default function Home() {
     const [teamImage, setTeamImage] = useState('/about/team-cimga.jpg')
     const [heroTitle, setHeroTitle] = useState('Expertos en Aseguramiento Metrológico')
     const [heroSubtitle, setHeroSubtitle] = useState('Consultoría, capacitación, verificación y calibración. Ahora, con control total de tus activos en la nube.')
+    const [selectedService, setSelectedService] = useState<any>(null);
+
+    const services = [
+        { 
+            id: 1, icon: Shield, title: 'Aseguramiento Metrológico', 
+            image: '/services/aseguramiento.png',
+            shortDesc: 'Gestión integral de sus procesos de medición para garantizar conformidad y calidad.',
+            longDesc: 'Gestionamos integralmente sus procesos de medición para garantizar la conformidad y la calidad de sus productos y servicios.',
+            benefits: ['Cumplimiento Normativo', 'Mitigación de Riesgos', 'Eficiencia en Auditorías'],
+            details: {
+                subtitle: 'Planes y Programas de Aseguramiento y Control',
+                cards: [
+                    { title: 'Clasificación de Equipos', desc: 'Identificación y clasificación detallada de todos los instrumentos de medición.' },
+                    { title: 'Levantamiento de Información', desc: 'Recopilación exhaustiva de datos técnicos y metrológicos base.' },
+                    { title: 'Cronogramas Integrados', desc: 'Planificación estratégica de rutinas para minimizar tiempos de inactividad.' },
+                    { title: 'Indicadores de Gestión', desc: 'Visualización de datos y métricas clave para la toma de decisiones.' }
+                ]
+            }
+        },
+        { 
+            id: 2, icon: Shield, title: '[NUEVO SERVICIO (PLACEHOLDER)]', 
+            image: '/services/seguimiento.png',
+            shortDesc: 'Espacio reservado para el nuevo servicio corporativo que complementará nuestra oferta de aseguramiento. Próximamente estructurado para satisfacer nuevas demandas industriales.',
+            longDesc: 'Espacio dinámico para la futura integración de servicios especializados que fortalecerán el ecosistema de aseguramiento metrológico.',
+            benefits: ['Innovación', 'Adaptabilidad', 'Nuevos Estándares'],
+            details: {
+                subtitle: 'Desarrollo de Nuevas Capacidades',
+                cards: [
+                    { title: 'En Construcción', desc: 'Módulo en fase de diseño e implementación.' }
+                ]
+            }
+        },
+        { 
+            id: 3, icon: BookOpen, title: 'Capacitación', 
+            image: '/services/capacitacion.png',
+            shortDesc: 'Programas especializados en metrología adaptados a las necesidades de su empresa.',
+            longDesc: 'Fortalezca las competencias de su equipo con nuestros programas de formación especializados en metrología y calidad.',
+            benefits: ['Programas a Medida', 'Certificación Técnica', 'Alineación ISO'],
+            details: {
+                subtitle: 'Capacitación y Mejora de Competencias',
+                hasMainImage: true,
+                items: [
+                    { title: 'Metrología Básica y Avanzada', desc: 'Fundamentos teóricos y prácticos para el personal técnico.' },
+                    { title: 'Interpretación de Certificados', desc: 'Análisis detallado de resultados y criterios de aceptación.' },
+                    { title: 'Buenas Prácticas de Laboratorio', desc: 'Normativas y procedimientos para asegurar la calidad.' },
+                    { title: 'Formación a la Medida', desc: 'Programas adaptados a las necesidades de su empresa.' }
+                ]
+            }
+        },
+        { 
+            id: 4, icon: Settings, title: 'Calibración', 
+            image: '/services/calibracion.png',
+            shortDesc: 'Servicios de calibración trazable y acreditada con laboratorios aliados.',
+            longDesc: 'Servicios de calibración trazable y acreditada con laboratorios aliados para garantizar la precisión de sus mediciones.',
+            benefits: ['Trazabilidad NIST/ONAC', 'Informe de Calibración', 'Precisión Garantizada'],
+            details: {
+                subtitle: 'Calibración de Instrumentos',
+                certification: 'NTC-ISO/IEC 17025',
+                cards: [
+                    { title: 'Medidores de Vibración', desc: 'Verificación de sensores y equipos de monitoreo dinámico.' },
+                    { title: 'Analizadores de Vibración', desc: 'Calibración de sistemas de análisis predictivo.' },
+                    { title: 'Cámaras Termográficas', desc: 'Ajuste de precisión para medición de temperatura infrarroja.' },
+                    { title: 'Alineadores Laser', desc: 'Certificación de alineación para maquinaria rotativa.' }
+                ]
+            }
+        },
+        { 
+            id: 5, icon: ActivitySquare, title: 'Mantenimiento', 
+            image: '/services/mantenimiento.png',
+            shortDesc: 'Evaluación técnica y mantenimiento preventivo de instrumentos de medición.',
+            longDesc: 'Mantenga sus instrumentos en óptimas condiciones con nuestro servicio técnico especializado y preventivo.',
+            benefits: ['Extensión de Vida Útil', 'Reducción de Fallas', 'Ajuste Certificado'],
+            details: {
+                subtitle: 'Diagnóstico, Mantenimiento y Verificación',
+                cards: [
+                    { title: 'Diagnóstico Técnico', desc: 'Evaluación exhaustiva del estado y funcionamiento de equipos.' },
+                    { title: 'Reparación Especializada', desc: 'Servicio técnico calificado para la restauración de instrumentos.' },
+                    { title: 'Verificación', desc: 'Comprobación de especificaciones segun aplicación industrial.' },
+                    { title: 'Mant. Preventivo', desc: 'Programas diseñados para extender la vida útil de sus activos.' }
+                ]
+            }
+        },
+        { 
+            id: 6, icon: Shield, title: 'Suministros', 
+            image: '/services/suministros.png',
+            shortDesc: 'Instrumentos de medición de alta calidad y accesorios especializados.',
+            longDesc: 'Proveemos instrumentos de medición de alta calidad y todos los accesorios necesarios para su operación técnica.',
+            benefits: ['Marcas Líderes', 'Asesoría en Compra', 'Garantía Técnica'],
+            details: {
+                subtitle: 'Suministros Especializados',
+                cards: [
+                    { title: 'Instrum. de Medición', desc: 'Calibradores, Micrómetros, Termómetros, Manómetros.' },
+                    { title: 'Almacenamiento', desc: 'Estuches de protección, Kits de limpieza, Soportes.' },
+                    { title: 'Repuestos Originales', desc: 'Sensores, Baterías, Cables y componentes críticos.' },
+                    { title: 'Asesoría Personalizada', desc: 'Selección de equipos, cotizaciones y soporte técnico.' }
+                ]
+            }
+        }
+    ];
+
+    const brands = [
+        { name: 'Fluke', logo: '/brands/fluke.png' },
+        { name: 'SKF', logo: '/brands/skf.png' },
+        { name: 'UNI-T', logo: '/brands/uni-t.jpg' },
+        { name: 'CTC', logo: '/brands/ctc.jpg' },
+        { name: 'DeltaTrak', logo: '/brands/deltatrak.jpg' },
+        { name: 'EasyLaser', logo: '/brands/easylaser.png' },
+        { name: 'Wilcoxon', logo: '/brands/wilcoxon.png' }
+    ]
 
     useEffect(() => {
         const fetchContent = async () => {
@@ -29,18 +144,18 @@ export default function Home() {
 
     return (
         <div style={{ backgroundColor: '#fafafa' }}>
-            {/* Hero - fiel al diseño del cliente */}
+            {/* 1. Hero */}
             <section style={{
-                minHeight: '100vh',
+                minHeight: '90vh',
                 display: 'flex',
                 alignItems: 'center',
-                background: 'linear-gradient(135deg, rgba(47,66,62,0.88) 0%, rgba(99,155,179,0.75) 100%), url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80") no-repeat center center/cover',
+                background: 'linear-gradient(135deg, rgba(47,66,62,0.68) 0%, rgba(99,155,179,0.55) 100%), url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80") no-repeat center center/cover',
                 color: 'white',
                 padding: '120px 6% 80px 6%',
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'visible'
             }}>
-                {/* Badge ISO — esquina superior derecha */}
+                {/* Badge ISO */}
                 <div style={{
                     position: 'absolute', top: '150px', right: '5%',
                     backgroundColor: 'rgba(255,255,255,0.92)',
@@ -60,15 +175,26 @@ export default function Home() {
                     </div>
                 </div>
 
-                {/* Logo circular grande — esquina inferior derecha (decorativo) */}
+                {/* Logo circular grande - Glass Effect */}
                 <div style={{
                     position: 'absolute', bottom: '5%', right: '5%',
-                    opacity: 0.85, zIndex: 5
+                    backgroundColor: 'rgba(255,255,255,0.15)',
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    borderRadius: '8px',
+                    padding: '12px 40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                    border: '1px solid rgba(255,255,255,0.25)',
+                    opacity: 0.95, 
+                    zIndex: 5
                 }}>
-                    <img src="/logo1.png" alt="MJM Logo decorativo" style={{ height: '200px', width: 'auto' }} />
+                    <img src="/logo1.png" alt="MJM Logo decorativo" style={{ height: '260px', width: 'auto' }} />
                 </div>
 
-                {/* Texto principal — izquierda */}
+                {/* Texto principal */}
                 <div style={{ maxWidth: '580px', zIndex: 10, position: 'relative' }}>
                     <h1 style={{ fontSize: '4.2rem', fontWeight: 800, lineHeight: 1.05, marginBottom: '24px', letterSpacing: '-1px' }}>
                         Expertos en{' '}
@@ -104,160 +230,264 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Diferenciador SaaS - El Portal de Operaciones */}
-            <section id="saas" style={{ padding: '120px 20px', backgroundColor: '#fff', position: 'relative' }}>
-                <div className="section-container" style={{ display: 'flex', alignItems: 'center', gap: '60px', flexWrap: 'wrap' }}>
-                    <div style={{ flex: '1 1 500px' }}>
-                        <span style={{ color: 'var(--mjm-orange)', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Innovación Exclusiva</span>
-                        <h2 style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--mjm-blue)', margin: '20px 0 30px 0', lineHeight: 1.2 }}>
-                            Del papel a la gestión en <span style={{ color: 'var(--mjm-orange)' }}>Tiempo Real</span>
-                        </h2>
-                        <p style={{ fontSize: '1.2rem', color: '#475569', lineHeight: 1.7, marginBottom: '30px' }}>
-                            Nos diferenciamos por ofrecerte acceso 24/7 a nuestro <strong>Portal de Control de Activos Metrológicos</strong>. Despídete de las planillas perdidas; ahora tus certificados de calibración, fechas de mantenimiento y el estado de cada instrumento están centralizados en nuestra plataforma SaaS.
-                        </p>
-                        
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '40px' }}>
-                            <div style={{ display: 'flex', alignItems: 'start', gap: '15px' }}>
-                                <div style={{ backgroundColor: 'rgba(245,130,32,0.1)', padding: '12px', borderRadius: '12px' }}><CloudCog size={24} className="text-orange" /></div>
-                                <div>
-                                    <h4 style={{ fontWeight: 700, color: 'var(--mjm-blue)', marginBottom: '5px' }}>100% en la Nube</h4>
-                                    <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.5 }}>Accede desde tu celular o computadora a toda tu data metrológica.</p>
-                                </div>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'start', gap: '15px' }}>
-                                <div style={{ backgroundColor: 'rgba(245,130,32,0.1)', padding: '12px', borderRadius: '12px' }}><ActivitySquare size={24} className="text-orange" /></div>
-                                <div>
-                                    <h4 style={{ fontWeight: 700, color: 'var(--mjm-blue)', marginBottom: '5px' }}>Trazabilidad</h4>
-                                    <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.5 }}>Historial completo de calibraciones y mantenimientos interactivo.</p>
-                                </div>
-                            </div>
-                        </div>
+            {/* 2. Nuestro Alcance */}
+            <section style={{ backgroundColor: 'var(--mjm-orange)', color: 'white', padding: '100px 0 80px 0', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ 
+                    position: 'absolute', top: 0, left: 0, right: 0, height: '1px', 
+                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)' 
+                }}></div>
+                <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(80px)', pointerEvents: 'none' }}></div>
 
-                        <a href={process.env.NEXT_PUBLIC_PORTAL_URL ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/login?tenant=mjm` : 'http://localhost:3000/login?tenant=mjm'} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', backgroundColor: 'var(--mjm-blue)', padding: '14px 30px' }}>
-                            <MonitorSmartphone size={20} style={{ marginRight: '10px' }} /> Ingresar al Portal Cliente
-                        </a>
-                    </div>
-                    
-                    {/* Mockup visual del Portal SaaS */}
-                    <div style={{ flex: '1 1 500px', position: 'relative' }}>
-                        <div style={{
-                            backgroundColor: 'white', borderRadius: '24px', padding: '10px',
-                            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)', border: '1px solid rgba(0,0,0,0.05)',
-                            transform: 'perspective(1000px) rotateY(-5deg) rotateX(5deg)', transition: 'transform 0.5s'
-                        }}
-                        onMouseOver={(e) => e.currentTarget.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)'}
-                        onMouseOut={(e) => e.currentTarget.style.transform = 'perspective(1000px) rotateY(-5deg) rotateX(5deg)'}
-                        >
-                            <div style={{ backgroundColor: '#f1f5f9', height: '400px', borderRadius: '16px', overflow: 'hidden', position: 'relative' }}>
-                                {/* Decorative Dashboard Mockup elements */}
-                                <div style={{ height: '50px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', padding: '0 20px', gap: '8px' }}>
-                                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#f87171' }}></div>
-                                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#facc15' }}></div>
-                                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#4ade80' }}></div>
-                                    <div style={{ marginLeft: 'auto', fontSize: '0.8rem', fontWeight: 600, color: '#94a3b8' }}>MJM Portal SaaS</div>
-                                </div>
-                                <div style={{ padding: '30px', display: 'flex', gap: '20px' }}>
-                                    <div style={{ width: '25%', height: '300px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}></div>
-                                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                                        <div style={{ height: '120px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', padding: '20px' }}>
-                                             <div style={{ width: '60%', height: '20px', backgroundColor: '#e2e8f0', borderRadius: '4px' }}></div>
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '20px', flex: 1 }}>
-                                            <div style={{ flex: 1, backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}></div>
-                                            <div style={{ flex: 1, backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}></div>
+                <div className="section-container">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '100px', flexWrap: 'wrap-reverse' }}>
+                        <div style={{ flex: '1 1 480px', position: 'relative' }}>
+                            <div style={{ position: 'relative', height: '520px', borderRadius: '40px', overflow: 'hidden', boxShadow: '0 40px 80px rgba(0,0,0,0.3)' }}>
+                                <Image src={teamImage} alt="Equipo MJM" fill style={{ objectFit: 'cover', objectPosition: 'center top' }} />
+                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 40%)' }}></div>
+                                <div style={{ position: 'absolute', bottom: '40px', left: '40px', right: '40px' }}>
+                                    <div style={{ backgroundColor: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', padding: '25px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                            <div style={{ backgroundColor: 'white', padding: '10px', borderRadius: '12px' }}>
+                                                <Shield size={24} color="var(--mjm-orange)" />
+                                            </div>
+                                            <div>
+                                                <div style={{ fontWeight: 800, fontSize: '1.2rem' }}>Compromiso MJM</div>
+                                                <div style={{ opacity: 1, fontSize: '0.9rem' }}>Calidad certificada en cada proceso.</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </section>
 
-            {/* Quick Overview Section con Glassmorphism */}
-            <section style={{ padding: '100px 20px', backgroundColor: '#f8fafc' }}>
-                <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-                    <h2 style={{ fontSize: '2.8rem', fontWeight: 800, color: 'var(--mjm-blue)', marginBottom: '20px' }}>
-                        Nuestros Pilares Operativos
-                    </h2>
-                    <p style={{ fontSize: '1.2rem', color: '#64748b', maxWidth: '700px', margin: '0 auto' }}>
-                        Combinamos el rigor técnico tradicional con la agilidad del ecosistema digital.
-                    </p>
-                </div>
-
-                <div className="section-container" style={{ padding: '0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
-                    {[
-                        { icon: Shield, title: 'Aseguramiento Metrológico', desc: 'Asesoría y consultoría bajo normas internacionales para garantizar auditorías impecables.' },
-                        { icon: Settings, title: 'Diagnóstico y Calibración', desc: 'Mantenimiento y verificación de instrumentos con máxima exactitud y trazabilidad demostrable.' },
-                        { icon: BookOpen, title: 'Formación y Capacitación', desc: 'Transferencia de conocimiento técnico para empoderar a tu equipo de calidad.' }
-                    ].map((feature, idx) => (
-                        <div key={idx} style={{ 
-                            padding: '40px', borderRadius: '24px', backgroundColor: 'white', 
-                            boxShadow: '0 10px 40px -10px rgba(0,0,0,0.08)',
-                            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', borderTop: '4px solid var(--mjm-orange)'
-                        }}
-                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-10px)'}
-                        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                        >
-                            <div style={{ width: '70px', height: '70px', backgroundColor: 'rgba(27, 54, 93, 0.05)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '30px' }}>
-                                <feature.icon className="text-orange" size={36} strokeWidth={1.5} />
-                            </div>
-                            <h3 style={{ fontSize: '1.6rem', marginBottom: '15px', color: 'var(--mjm-blue)', fontWeight: 700 }}>{feature.title}</h3>
-                            <p style={{ opacity: 0.8, lineHeight: 1.7, color: '#334155', fontSize: '1.05rem' }}>
-                                {feature.desc}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Nuestro Alcance Section - Modernizada */}
-            <section style={{ backgroundColor: 'var(--mjm-dark-blue)', color: 'white', padding: '120px 0', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(245,130,32,0.5), transparent)' }}></div>
-                <div className="section-container">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '80px', flexWrap: 'wrap-reverse' }}>
-                        <div style={{ flex: '1 1 450px', position: 'relative', height: '600px', borderRadius: '32px', overflow: 'hidden' }}>
-                            <Image
-                                src={teamImage}
-                                alt="Equipo MJM"
-                                fill
-                                style={{ objectFit: 'cover', objectPosition: 'center top' }}
-                            />
-                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(13, 27, 42, 0.9) 0%, transparent 60%)' }}></div>
-                        </div>
-
-                        <div style={{ flex: '1 1 500px' }}>
-                            <div style={{ color: 'var(--mjm-orange)', fontWeight: 600, letterSpacing: '1px', marginBottom: '15px' }}>EXPERIENCIA COMPROBADA</div>
-                            <h2 style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '30px', lineHeight: 1.1 }}>
-                                Nuestro Alcance <span style={{ color: 'var(--mjm-orange)' }}>Estratégico</span>
+                        <div style={{ flex: '1 1 500px', zIndex: 10 }}>
+                            <div style={{ 
+                                backgroundColor: '#2f423e', color: 'white', display: 'inline-block', 
+                                padding: '8px 20px', borderRadius: '50px', fontWeight: 800, 
+                                letterSpacing: '2.5px', textTransform: 'uppercase', fontSize: '0.75rem', 
+                                marginBottom: '25px', boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
+                                border: '1px solid rgba(255,255,255,0.1)'
+                            }}>LOGÍSTICA Y CONTROL</div>
+                            
+                            <h2 style={{ fontSize: '3.8rem', fontWeight: 800, marginBottom: '35px', lineHeight: 1.1, letterSpacing: '-1.5px', color: 'white' }}> 
+                                Alcance <br/> 
+                                <span style={{ color: '#e0f2fe', textShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>Estratégico</span> 
                             </h2>
-                            <p style={{ fontSize: '1.2rem', lineHeight: 1.7, marginBottom: '40px', color: '#cbd5e1', fontWeight: 400 }}>
-                                Integración fluida entre metodologías precisas e infraestructura digital corporativa, cumpliendo todos los requerimientos de la norma ISO 9001.
+                            
+                            <p style={{ fontSize: '1.3rem', lineHeight: 1.8, marginBottom: '50px', color: 'white', fontWeight: 400, maxWidth: '540px', opacity: 0.95 }}> 
+                                Integramos metodologías de precisión con infraestructura digital corporativa para cumplir con rigor cada fase de la norma ISO 9001. 
                             </p>
-
-                            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '25px' }}>
+                            
+                            <div style={{ display: 'grid', gap: '30px' }}>
                                 {[
-                                    "Consultoría para implementación de planes de aseguramiento.",
-                                    "Entrenamiento de alto nivel en metrología.",
-                                    "Trazabilidad garantizada desde nuestra Plataforma Web.",
-                                    "Mantenimiento, ajuste y logística de calibración."
+                                    { title: "Consultoría Experta", desc: "Diseño e implementación de planes de aseguramiento personalizados." },
+                                    { title: "Capacitación Técnica", desc: "Entrenamiento de alto nivel para equipos de gestión de calidad." },
+                                    { title: "Trazabilidad Digital", desc: "Control total y acceso inmediato desde nuestra Plataforma Web." },
+                                    { title: "Logística Integral", desc: "Servicio completo de mantenimiento, ajuste y calibración certificada." }
                                 ].map((item, idx) => (
-                                    <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '20px', fontSize: '1.15rem', fontWeight: 500 }}>
-                                        <div style={{
-                                            backgroundColor: 'rgba(245,130,32,0.2)',
-                                            borderRadius: '50%', padding: '4px',
-                                            display: 'flex', flexShrink: 0
-                                        }}>
-                                            <CheckCircle2 size={24} style={{ color: 'var(--mjm-orange)' }} />
+                                    <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '24px' }}>
+                                        <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '12px', display: 'flex', flexShrink: 0, marginTop: '4px', boxShadow: '0 8px 20px rgba(0,0,0,0.1)' }}>
+                                            <CheckCircle2 size={20} style={{ color: 'var(--mjm-blue)' }} />
                                         </div>
-                                        <span style={{ paddingTop: '2px' }}>{item}</span>
-                                    </li>
+                                        <div>
+                                            <div style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: '6px', color: 'white' }}>{item.title}</div>
+                                            <div style={{ color: 'white', opacity: 0.9, fontSize: '1.05rem', lineHeight: 1.5 }}>{item.desc}</div>
+                                        </div>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            {/* 3. Portafolio Técnico (Servicios) */}
+            <section style={{ padding: '120px 20px', backgroundColor: 'white', position: 'relative' }}>
+                <div style={{ textAlign: 'center', marginBottom: '80px' }}>
+                    <div style={{ color: 'var(--mjm-orange)', fontWeight: 800, letterSpacing: '3px', fontSize: '0.8rem', marginBottom: '20px', textTransform: 'uppercase' }}>
+                        Servicios de Ingeniería
+                    </div>
+                    <h2 style={{ fontSize: '4.5rem', fontWeight: 900, color: 'var(--mjm-blue)', marginBottom: '25px', lineHeight: 1.05, letterSpacing: '-2px' }}>
+                        Portafolio<br/>
+                        Técnico
+                    </h2>
+                </div>
+
+                <div className="section-container" style={{ padding: '0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0' }}>
+                    {services.map((service, idx) => {
+                        const Icon = service.icon;
+                        return (
+                            <div key={idx} style={{ 
+                                backgroundColor: 'white', 
+                                padding: '50px 40px',
+                                border: '1px solid #f1f5f9',
+                                transition: 'all 0.3s ease',
+                                cursor: 'pointer',
+                                display: 'flex', flexDirection: 'column',
+                                alignItems: 'center',
+                                textAlign: 'center'
+                            }}
+                            onClick={() => setSelectedService(service)}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.boxShadow = '0 20px 40px -15px rgba(0,0,0,0.08)';
+                                e.currentTarget.style.transform = 'translateY(-5px)';
+                                e.currentTarget.style.zIndex = '10';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.transform = 'none';
+                                e.currentTarget.style.zIndex = '1';
+                            }}
+                            >
+                                <div style={{ marginBottom: '30px' }}>
+                                    <Icon size={36} style={{ color: 'var(--mjm-orange)' }} strokeWidth={1.5} />
+                                </div>
+                                <h3 style={{ fontSize: '1.25rem', color: 'var(--mjm-blue)', fontWeight: 800, lineHeight: 1.3, textTransform: 'uppercase', marginBottom: '20px', letterSpacing: '1px' }}>
+                                    {service.title}
+                                </h3>
+                                <div style={{ width: '30px', height: '3px', backgroundColor: 'var(--mjm-orange)', marginBottom: '25px' }}></div>
+                                <p style={{ color: '#64748b', fontSize: '1rem', lineHeight: 1.7, flexGrow: 1, marginBottom: '40px' }}>
+                                    {service.shortDesc}
+                                </p>
+                                <div style={{ 
+                                    color: 'var(--mjm-orange)', fontWeight: 800, fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase',
+                                    display: 'flex', alignItems: 'center', gap: '8px'
+                                }}>
+                                    DETALLES TÉCNICOS <ArrowRight size={16} strokeWidth={2.5} />
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+            </section>
+
+            {/* 4. Innovación Digital (SaaS) */}
+            <SaaSSection />
+
+            {/* 5. Carrusel Horizontal de Marcas */}
+            <section style={{ padding: '80px 0', backgroundColor: 'white', overflow: 'hidden' }}>
+                <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                    <div style={{ color: 'var(--mjm-orange)', fontWeight: 700, letterSpacing: '2px', fontSize: '0.85rem', marginBottom: '10px' }}>MERCADEO ESTRATÉGICO</div>
+                    <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--mjm-blue)' }}>Marcas Aliadas</h2>
+                </div>
+                
+                <div style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
+                    <div className="scroll-container">
+                        {[...brands, ...brands].map((brand, i) => (
+                            <div key={i} className="brand-card">
+                                <img src={brand.logo} alt={brand.name} style={{ maxHeight: '60px', width: 'auto', filter: 'grayscale(100%)', opacity: 0.6, transition: 'all 0.3s' }} 
+                                    onMouseOver={e => { e.currentTarget.style.filter = 'grayscale(0%)'; e.currentTarget.style.opacity = '1'; }}
+                                    onMouseOut={e => { e.currentTarget.style.filter = 'grayscale(100%)'; e.currentTarget.style.opacity = '0.6'; }}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Modal de Detalle de Servicio */}
+            {selectedService && (
+                <div style={{ 
+                    position: 'fixed', inset: 0, backgroundColor: 'rgba(47, 66, 62, 0.4)', 
+                    backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px'
+                }} onClick={() => setSelectedService(null)}>
+                    <div style={{ 
+                        backgroundColor: 'white', borderRadius: '32px', maxWidth: '900px', width: '100%', 
+                        maxHeight: '94vh', overflowY: 'auto', position: 'relative', boxShadow: '0 40px 100px rgba(0,0,0,0.3)',
+                    }} onClick={e => e.stopPropagation()}>
+                        
+                        {/* Botón Cerrar */}
+                        <button 
+                            onClick={() => setSelectedService(null)}
+                            style={{ position: 'absolute', top: '24px', right: '24px', backgroundColor: '#f1f5f9', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10 }}
+                        >
+                            <span style={{ fontSize: '24px', lineHeight: 1, color: '#64748b' }}>&times;</span>
+                        </button>
+
+                        <div style={{ padding: '50px' }}>
+                            {/* Header Modal */}
+                            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                                <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: 'var(--mjm-blue)', marginBottom: '10px' }}>{selectedService.details?.subtitle || selectedService.title}</h2>
+                                <p style={{ fontSize: '1.1rem', color: '#64748b', maxWidth: '700px', margin: '0 auto' }}>{selectedService.longDesc}</p>
+                            </div>
+
+                            {/* Contenido Dinámico según detalles */}
+                            {selectedService.details?.cards && (
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '40px' }}>
+                                    {selectedService.details.cards.map((card: any, i: number) => {
+                                        const CardIcon = [ClipboardCheck, Database, Calendar, BarChart3, Activity, Clock, Thermometer, Ruler, Search, Wrench, ShieldCheck, HeartPulse, Box, Briefcase, Settings, Users][(selectedService.id - 1) * 4 + i] || CheckCircle2;
+                                        return (
+                                            <div key={i} style={{ padding: '25px', borderRadius: '20px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', gap: '20px' }}>
+                                                <div style={{ color: 'var(--mjm-orange)', flexShrink: 0 }}><CardIcon size={32} strokeWidth={1.5} /></div>
+                                                <div>
+                                                    <h4 style={{ fontWeight: 800, color: 'var(--mjm-blue)', marginBottom: '5px' }}>{card.title}</h4>
+                                                    <p style={{ fontSize: '0.9rem', color: '#64748b', lineHeight: 1.5 }}>{card.desc}</p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+
+                            {/* Layout Especial para Capacitación (Imagen + Lista) */}
+                            {selectedService.details?.hasMainImage && (
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '40px', marginBottom: '40px', alignItems: 'center' }}>
+                                    <div style={{ borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', height: '100%', minHeight: '350px', position: 'relative' }}>
+                                        <Image src={selectedService.image} alt="Formación" fill style={{ objectFit: 'cover' }} />
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                        {selectedService.details.items.map((item: any, i: number) => {
+                                            const ItemIcon = [BookText, GraduationCap, CheckCircle2, UserCheck][i] || CheckCircle2;
+                                            return (
+                                                <div key={i} style={{ display: 'flex', gap: '15px' }}>
+                                                    <div style={{ color: 'var(--mjm-orange)' }}><ItemIcon size={24} /></div>
+                                                    <div>
+                                                        <h4 style={{ fontWeight: 800, color: 'var(--mjm-blue)', fontSize: '1.05rem', marginBottom: '2px' }}>{item.title}</h4>
+                                                        <p style={{ fontSize: '0.9rem', color: '#64748b' }}>{item.desc}</p>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Barra de Certificación ISO 17025 */}
+                            {selectedService.details?.certification && (
+                                <div style={{ 
+                                    backgroundColor: 'var(--mjm-orange)', borderRadius: '16px', padding: '20px 30px', 
+                                    color: 'white', display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px',
+                                    boxShadow: '0 10px 25px rgba(247, 147, 27, 0.3)'
+                                }}>
+                                    <div style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '10px', borderRadius: '50%' }}>
+                                        <ShieldCheck size={28} />
+                                    </div>
+                                    <div>
+                                        <div style={{ fontWeight: 800, fontSize: '1.1rem' }}>Comprometidos con la Trazabilidad</div>
+                                        <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Nuestros patrones y entregables cumplen con la norma {selectedService.details.certification}</div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Footer Modal con Botones */}
+                            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', borderTop: '1px solid #f1f5f9', paddingTop: '30px' }}>
+                                <a href="/contacto" className="btn-primary" style={{ padding: '16px 40px', borderRadius: '14px', fontSize: '1.1rem', fontWeight: 700 }}>
+                                    Solicitar Información
+                                </a>
+                                {selectedService.isSaaS && (
+                                    <a href="/login?tenant=mjm" style={{ 
+                                        padding: '16px 40px', borderRadius: '14px', fontSize: '1.1rem', fontWeight: 700, 
+                                        backgroundColor: '#f1f5f9', border: 'none', color: 'var(--mjm-blue)', display: 'inline-flex', alignItems: 'center', gap: '10px'
+                                    }}>
+                                        Ir al Portal <ArrowRight size={20} />
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

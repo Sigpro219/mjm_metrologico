@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { User } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 
 export function Header() {
@@ -65,28 +66,31 @@ export function Header() {
                 })}
 
                 <a
-                    href={process.env.NEXT_PUBLIC_PORTAL_URL ? `${process.env.NEXT_PUBLIC_PORTAL_URL}/login?tenant=mjm` : 'http://localhost:3000/login?tenant=mjm'}
+                    href="/login?tenant=mjm"
+                    aria-label="Portal Operativo"
                     style={{
                         color: 'white',
                         backgroundColor: 'var(--mjm-orange)',
-                        padding: scrolled ? '10px 24px' : '11px 26px',
-                        borderRadius: '30px',
+                        padding: scrolled ? '10px' : '12px',
+                        borderRadius: '50%',
                         fontWeight: 700,
                         marginLeft: '10px',
                         boxShadow: '0 4px 15px rgba(245,130,32,0.35)',
                         transition: 'all 0.3s',
-                        display: 'inline-block'
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}
                     onMouseOver={e => {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
                         e.currentTarget.style.boxShadow = '0 8px 25px rgba(245,130,32,0.5)';
                     }}
                     onMouseOut={e => {
-                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.transform = 'translateY(0) scale(1)';
                         e.currentTarget.style.boxShadow = '0 4px 15px rgba(245,130,32,0.35)';
                     }}
                 >
-                    Portal Operativo
+                    <User size={20} />
                 </a>
             </div>
         </nav>
