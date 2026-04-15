@@ -14,25 +14,29 @@ export default function ServiciosPage() {
 
     useEffect(() => {
         const fetchContent = async () => {
-            const keys = [
-                'servicios_title', 'servicios_subtitle', 'servicios_image',
-                'servicio_1_title', 'servicio_1_desc', 'servicio_1_image', 'servicio_1_subservices',
-                'servicio_2_title', 'servicio_2_desc', 'servicio_2_image', 'servicio_2_subservices',
-                'servicio_3_title', 'servicio_3_desc', 'servicio_3_image', 'servicio_3_subservices',
-                'servicio_4_title', 'servicio_4_desc', 'servicio_4_image', 'servicio_4_subservices',
-                'servicio_5_title', 'servicio_5_desc', 'servicio_5_image', 'servicio_5_subservices'
-            ]
-            const { data } = await supabase.from('site_settings').select('id, value').in('id', keys)
-            if (data) {
-                const titleData = data.find(i => i.id === 'servicios_title')
-                const subtitleData = data.find(i => i.id === 'servicios_subtitle')
-                const bannerData = data.find(i => i.id === 'servicios_image')
+            try {
+                const keys = [
+                    'servicios_title', 'servicios_subtitle', 'servicios_image',
+                    'servicio_1_title', 'servicio_1_desc', 'servicio_1_image', 'servicio_1_subservices',
+                    'servicio_2_title', 'servicio_2_desc', 'servicio_2_image', 'servicio_2_subservices',
+                    'servicio_3_title', 'servicio_3_desc', 'servicio_3_image', 'servicio_3_subservices',
+                    'servicio_4_title', 'servicio_4_desc', 'servicio_4_image', 'servicio_4_subservices',
+                    'servicio_5_title', 'servicio_5_desc', 'servicio_5_image', 'servicio_5_subservices'
+                ]
+                const { data, error } = await supabase.from('site_settings').select('id, value').in('id', keys)
+                
+                // Merge with defaults if needed
+                let settings = data || [];
+                
+                const titleData = settings.find(i => i.id === 'servicios_title')
+                const subtitleData = settings.find(i => i.id === 'servicios_subtitle')
+                const bannerData = settings.find(i => i.id === 'servicios_image')
                 if (titleData?.value) setTitle(titleData.value)
                 if (subtitleData?.value) setSubtitle(subtitleData.value)
                 if (bannerData?.value) setBannerImage(bannerData.value)
 
                 const dynamicServices = [1, 2, 3, 4, 5].map((num) => {
-                    const dbSub = data.find(i => i.id === `servicio_${num}_subservices`);
+                    const dbSub = settings.find(i => i.id === `servicio_${num}_subservices`);
                     let subServices = { title: '', desc: '', items: [] };
                     if (dbSub?.value) {
                         try {
@@ -41,17 +45,20 @@ export default function ServiciosPage() {
                     }
 
                     return {
-                        title: data.find(i => i.id === `servicio_${num}_title`)?.value || `Servicio ${num}`,
-                        desc: data.find(i => i.id === `servicio_${num}_desc`)?.value || '',
-                        image: data.find(i => i.id === `servicio_${num}_image`)?.value || '',
+                        title: settings.find(i => i.id === `servicio_${num}_title`)?.value || `Servicio ${num}`,
+                        desc: settings.find(i => i.id === `servicio_${num}_desc`)?.value || '',
+                        image: settings.find(i => i.id === `servicio_${num}_image`)?.value || '',
                         subServices
                     }
                 })
                 setServicesData(dynamicServices)
+            } catch (err) {
+                console.error("Error fetching services content:", err);
             }
         }
         fetchContent()
     }, [])
+
     return (
         <div className="pb-20">
             {/* Services Header */}

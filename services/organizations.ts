@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { MJM_ORGANIZATION_DEFAULT } from "@/lib/constants";
 
 export interface Organization {
   id: string;
@@ -22,21 +23,39 @@ export interface Profile {
 
 export const OrganizationService = {
   async getBySlug(slug: string): Promise<Organization | null> {
-    const { data, error } = await supabase
-      .from("organizations")
-      .select("*")
-      .eq("slug", slug)
-      .maybeSingle();
+    try {
+      const { data, error } = await supabase
+        .from("organizations")
+        .select("*")
+        .eq("slug", slug)
+        .maybeSingle();
 
-    if (error) {
-      // Improved error logging for Supabase response
-      const errorMessage = error.message || 'Error desconocido';
-      const errorCode = (error as unknown as Record<string, unknown>).code as string || 'N/C';
-      console.error(`Error fetching organization [${slug}]: code=${errorCode}, message=${errorMessage}`, error);
+      if (error) {
+        const errorMessage = error.message || 'Error desconocido';
+        const errorCode = (error as any).code || 'N/C';
+
+        // Silent common fetch failure when offline/misconfigured
+        if (errorMessage.includes('fetch failed')) {
+          console.warn(`Database connection failed for [${slug}]. Using local fallback defaults.`);
+        } else {
+          console.error(`Error fetching organization [${slug}]: code=${errorCode}, message=${errorMessage}`);
+        }
+        
+        // Fallback to MJM if it's the requested slug
+        if (slug === 'mjm') return MJM_ORGANIZATION_DEFAULT as Organization;
+        return null;
+      }
+
+      if (!data && slug === 'mjm') {
+        return MJM_ORGANIZATION_DEFAULT as Organization;
+      }
+
+      return data as Organization;
+    } catch (e) {
+      console.error("Critical error in getBySlug:", e);
+      if (slug === 'mjm') return MJM_ORGANIZATION_DEFAULT as Organization;
       return null;
     }
-
-    return data as Organization;
   },
 
   async update(id: string, updates: Partial<Organization>): Promise<Organization | null> {

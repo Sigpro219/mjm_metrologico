@@ -128,15 +128,28 @@ export default function Home() {
 
     useEffect(() => {
         const fetchContent = async () => {
-            const { data } = await supabase.from('site_settings').select('id, value')
-            if (data) {
-                const imgData = data.find(i => i.id === 'nosotros_url')
-                const titleData = data.find(i => i.id === 'home_hero_title')
-                const subtitleData = data.find(i => i.id === 'home_hero_subtitle')
+            try {
+                const { data, error } = await supabase.from('site_settings').select('id, value')
+                
+                // Merge with defaults
+                const settings = [...DEFAULT_SITE_SETTINGS];
+                if (data) {
+                    data.forEach(item => {
+                        const index = settings.findIndex(s => s.id === item.id);
+                        if (index !== -1) settings[index] = item;
+                        else settings.push(item);
+                    });
+                }
+
+                const imgData = settings.find(i => i.id === 'nosotros_url')
+                const titleData = settings.find(i => i.id === 'home_hero_title')
+                const subtitleData = settings.find(i => i.id === 'home_hero_subtitle')
 
                 if (imgData?.value) setTeamImage(imgData.value)
                 if (titleData?.value) setHeroTitle(titleData.value)
                 if (subtitleData?.value) setHeroSubtitle(subtitleData.value)
+            } catch (err) {
+                console.error("Error fetching homepage content:", err);
             }
         }
         fetchContent()
