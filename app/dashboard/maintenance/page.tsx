@@ -123,17 +123,17 @@ export default function MaintenancePage() {
               <div className="flex flex-col">
                 <span>
                   {viewMode === "calendar"
-                    ? "Control de Cronograma"
+                    ? "Control Metrológico"
                     : viewMode === "metrics"
                       ? "Métricas Operativas"
                       : "Plan Maestro"}
                 </span>
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mt-1 font-technical">
                    {viewMode === "calendar"
-                    ? "Seguimiento Preventivo Mensual"
+                    ? "Seguimiento Metrológico Mensual"
                     : viewMode === "metrics"
-                      ? "Indicadores Clave de Desempeño"
-                      : "Gestión de Flujo de Trabajo"}
+                      ? "Indicadores de Calidad"
+                      : "Gestión de Mantenimiento de Instrumentos"}
                 </span>
               </div>
             </h1>

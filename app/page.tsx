@@ -36,15 +36,18 @@ export default function Home() {
             }
         },
         { 
-            id: 2, icon: Shield, title: '[NUEVO SERVICIO (PLACEHOLDER)]', 
-            image: '/services/seguimiento.png',
-            shortDesc: 'Espacio reservado para el nuevo servicio corporativo que complementará nuestra oferta de aseguramiento. Próximamente estructurado para satisfacer nuevas demandas industriales.',
-            longDesc: 'Espacio dinámico para la futura integración de servicios especializados que fortalecerán el ecosistema de aseguramiento metrológico.',
-            benefits: ['Innovación', 'Adaptabilidad', 'Nuevos Estándares'],
+            id: 2, icon: MonitorSmartphone, title: 'Portal Operativo (SAAS)', 
+            image: '/services/portal.png',
+            shortDesc: 'Plataforma Cloud-First para la gestión integral de activos, cronogramas de mantenimiento y aseguramiento metrológico.',
+            longDesc: 'Centralice toda la gestión de sus instrumentos en nuestra plataforma propietaria, garantizando trazabilidad total y cumplimiento normativo en tiempo real.',
+            benefits: ['Gestión Cloud 24/7', 'Alertas Automáticas', 'Historial Inalterable'],
             details: {
-                subtitle: 'Desarrollo de Nuevas Capacidades',
+                subtitle: 'Portal de Control de Activos',
                 cards: [
-                    { title: 'En Construcción', desc: 'Módulo en fase de diseño e implementación.' }
+                    { title: 'Trazabilidad Digital', desc: 'Acceso inmediato a certificados e historiales desde cualquier lugar.' },
+                    { title: 'Alertas de Calibración', desc: 'Sistema inteligente de notificaciones para evitar vencimientos.' },
+                    { title: 'Gestión de Inventario', desc: 'Control detallado de ubicación y estado de cada activo.' },
+                    { title: 'Reportes en Vivo', desc: 'Indicadores de cumplimiento y desempeño metrológico al instante.' }
                 ]
             }
         },
@@ -66,7 +69,7 @@ export default function Home() {
             }
         },
         { 
-            id: 4, icon: Settings, title: 'Calibración', 
+            id: 4, icon: Settings, title: 'Calibración de Instrumentos', 
             image: '/services/calibracion.png',
             shortDesc: 'Servicios de calibración trazable y acreditada con laboratorios aliados.',
             longDesc: 'Servicios de calibración trazable y acreditada con laboratorios aliados para garantizar la precisión de sus mediciones.',
@@ -83,7 +86,7 @@ export default function Home() {
             }
         },
         { 
-            id: 5, icon: ActivitySquare, title: 'Mantenimiento', 
+            id: 5, icon: ActivitySquare, title: 'Diagnóstico, Mantenimiento y Verificación', 
             image: '/services/mantenimiento.png',
             shortDesc: 'Evaluación técnica y mantenimiento preventivo de instrumentos de medición.',
             longDesc: 'Mantenga sus instrumentos en óptimas condiciones con nuestro servicio técnico especializado y preventivo.',
@@ -99,7 +102,7 @@ export default function Home() {
             }
         },
         { 
-            id: 6, icon: Shield, title: 'Suministros', 
+            id: 6, icon: Shield, title: 'Suministros e Instrumentos', 
             image: '/services/suministros.png',
             shortDesc: 'Instrumentos de medición de alta calidad y accesorios especializados.',
             longDesc: 'Proveemos instrumentos de medición de alta calidad y todos los accesorios necesarios para su operación técnica.',
@@ -114,6 +117,7 @@ export default function Home() {
                 ]
             }
         }
+
     ];
 
     const brands = [
@@ -280,31 +284,33 @@ export default function Home() {
                                 letterSpacing: '2.5px', textTransform: 'uppercase', fontSize: '0.75rem', 
                                 marginBottom: '25px', boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
                                 border: '1px solid rgba(255,255,255,0.1)'
-                            }}>LOGÍSTICA Y CONTROL</div>
+                            }}>TRAYECTORIA Y CONFIANZA</div>
                             
                             <h2 style={{ fontSize: '3.8rem', fontWeight: 800, marginBottom: '35px', lineHeight: 1.1, letterSpacing: '-1.5px', color: 'white' }}> 
-                                Alcance <br/> 
-                                <span style={{ color: '#e0f2fe', textShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>Estratégico</span> 
+                                Nuestro <br/> 
+                                <span style={{ color: '#e0f2fe', textShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>Alcance</span> 
                             </h2>
                             
-                            <p style={{ fontSize: '1.3rem', lineHeight: 1.8, marginBottom: '50px', color: 'white', fontWeight: 400, maxWidth: '540px', opacity: 0.95 }}> 
-                                Integramos metodologías de precisión con infraestructura digital corporativa para cumplir con rigor cada fase de la norma ISO 9001. 
+                            <p style={{ fontSize: '1.2rem', lineHeight: 1.7, marginBottom: '50px', color: 'white', fontWeight: 400, maxWidth: '540px', opacity: 0.9 }}> 
+                                Con más de 12 años de experiencia, Asesorías Integrales MJM S.A.S. se ha consolidado como el aliado estratégico ideal para empresas que buscan la excelencia en sus sistemas de medición.
                             </p>
                             
-                            <div style={{ display: 'grid', gap: '30px' }}>
+                            <div style={{ display: 'grid', gap: '35px' }}>
                                 {[
-                                    { title: "Consultoría Experta", desc: "Diseño e implementación de planes de aseguramiento personalizados." },
-                                    { title: "Capacitación Técnica", desc: "Entrenamiento de alto nivel para equipos de gestión de calidad." },
-                                    { title: "Trazabilidad Digital", desc: "Control total y acceso inmediato desde nuestra Plataforma Web." },
-                                    { title: "Logística Integral", desc: "Servicio completo de mantenimiento, ajuste y calibración certificada." }
+                                    { num: "01", title: "CONSULTORÍA ISO 9001", desc: "Asesoramos la implementación de sistemas de calidad metrológica bajo los más altos estándares internacionales." },
+                                    { num: "02", title: "CRITERIO TÉCNICO", desc: "Nuestros expertos brindan soporte especializado para la toma de decisiones críticas en aseguramiento metrológico." }
                                 ].map((item, idx) => (
                                     <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '24px' }}>
-                                        <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '12px', display: 'flex', flexShrink: 0, marginTop: '4px', boxShadow: '0 8px 20px rgba(0,0,0,0.1)' }}>
-                                            <CheckCircle2 size={20} style={{ color: 'var(--mjm-blue)' }} />
+                                        <div style={{ 
+                                            backgroundColor: 'white', borderRadius: '12px', padding: '10px 14px', 
+                                            display: 'flex', flexShrink: 0, marginTop: '4px', boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
+                                            color: 'var(--mjm-blue)', fontWeight: 800, fontSize: '1.2rem'
+                                        }}>
+                                            {item.num}
                                         </div>
                                         <div>
-                                            <div style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: '6px', color: 'white' }}>{item.title}</div>
-                                            <div style={{ color: 'white', opacity: 0.9, fontSize: '1.05rem', lineHeight: 1.5 }}>{item.desc}</div>
+                                            <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '4px', color: 'white', letterSpacing: '1px' }}>{item.title}</div>
+                                            <div style={{ color: 'white', opacity: 0.85, fontSize: '1rem', lineHeight: 1.5 }}>{item.desc}</div>
                                         </div>
                                     </div>
                                 ))}

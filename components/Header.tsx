@@ -67,31 +67,36 @@ export function Header() {
 
                 <a
                     href="/login?tenant=mjm"
-                    aria-label="Portal Operativo"
                     style={{
                         color: 'white',
                         backgroundColor: 'var(--mjm-orange)',
-                        padding: scrolled ? '10px' : '12px',
-                        borderRadius: '50%',
-                        fontWeight: 700,
-                        marginLeft: '10px',
-                        boxShadow: '0 4px 15px rgba(245,130,32,0.35)',
-                        transition: 'all 0.3s',
+                        padding: scrolled ? '10px 22px' : '12px 26px',
+                        borderRadius: '10px',
+                        fontWeight: 800,
+                        fontSize: scrolled ? '0.85rem' : '0.9rem',
+                        marginLeft: '15px',
+                        boxShadow: '0 8px 25px rgba(245,130,32,0.35)',
+                        transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
                     }}
                     onMouseOver={e => {
-                        e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
-                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(245,130,32,0.5)';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 12px 30px rgba(245,130,32,0.5)';
+                        e.currentTarget.style.backgroundColor = '#fa9d2d';
                     }}
                     onMouseOut={e => {
-                        e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(245,130,32,0.35)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 8px 25px rgba(245,130,32,0.35)';
+                        e.currentTarget.style.backgroundColor = 'var(--mjm-orange)';
                     }}
                 >
-                    <User size={20} />
+                    Portal de Clientes
                 </a>
+
             </div>
         </nav>
     );

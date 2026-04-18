@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { db, storage } from '@/lib/firebase/config';
+import { collection, getDocs, doc, updateDoc, addDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as XLSX from 'xlsx';
 import { 
   Search, 
@@ -45,7 +47,7 @@ interface Asset {
     mfg_year?: string;
     purchase_date?: string;
   };
-  parent_id: string;
+  parentId: string; // Changed to match Firebase camelCase structure
   path?: string[];
 }
 
@@ -55,7 +57,8 @@ interface HierarchyNode {
   unit_code: string;
   full_code?: string;
   type: string;
-  parent_id: string | null;
+  parentId: string | null;
+  tenantId?: string; // Added tenantId to match Firebase
   children: HierarchyNode[];
   metadata?: Asset['metadata'];
 }
@@ -102,9 +105,11 @@ export default function AssetsPage() {
         setTimeout(() => reject(new Error('Timeout: El servidor tardó demasiado en responder')), 10000);
       });
 
-      const fetchPromise = supabase
-        .from('organizational_units')
-        .select('*');
+      const fetchPromise = getDocs(collection(db, 'hierarchy')).then(snapshot => {
+        return { data: snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as HierarchyNode[], error: null };
+      }).catch(error => {
+        return { data: null, error };
+      });
 
       // Race against the timeout
       const response = await Promise.race([fetchPromise, timeoutPromise]) as { data: HierarchyNode[] | null; error: any };
@@ -125,8 +130,8 @@ export default function AssetsPage() {
   
         allNodes.forEach(node => { map[node.id] = { ...node, children: [] }; });
         allNodes.forEach(node => {
-          if (node.parent_id && map[node.parent_id]) {
-            map[node.parent_id].children.push(map[node.id]);
+          if (node.parentId && map[node.parentId]) {
+            map[node.parentId].children.push(map[node.id]);
           } else {
             roots.push(map[node.id]);
           }
@@ -149,11 +154,11 @@ export default function AssetsPage() {
         assignCodes(roots);
         setHierarchy(roots);
         
-        const machines = allNodes
-          .filter(n => n.type === 'machine')
+        const instruments = allNodes
+          .filter(n => n.type === 'instrument')
           .map(n => map[n.id] as unknown as Asset);
           
-        setAssets(machines);
+        setAssets(instruments);
       }
     } catch (err) {
       console.error('System Error:', err);
@@ -175,27 +180,16 @@ export default function AssetsPage() {
 
     let finalImageUrl = newNode.metadata.image_url;
 
-    // Actual upload to Supabase Storage
+    // Actual upload to Firebase Storage
     if (imageFile) {
       try {
         const fileExt = imageFile.name.split('.').pop();
         const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-        const filePath = `assets/${fileName}`;
+        const filePath = `asset-images/${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from('asset-images')
-          .upload(filePath, imageFile, {
-            cacheControl: '3600',
-            upsert: false
-          });
-
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('asset-images')
-          .getPublicUrl(filePath);
-
-        finalImageUrl = publicUrl;
+        const storageRef = ref(storage, filePath);
+        await uploadBytes(storageRef, imageFile);
+        finalImageUrl = await getDownloadURL(storageRef);
       } catch (error) {
         const uploadError = error as Error;
         console.error('Error uploading image:', uploadError);
@@ -204,26 +198,27 @@ export default function AssetsPage() {
       }
     }
 
-    if (isEditing && editingId) {
-      const { error } = await supabase.from('organizational_units').update({
-        name: newNode.name,
-        unit_code: newNode.unit_code.padStart(2, '0'),
-        parent_id: selZone,
-        metadata: { ...newNode.metadata, image_url: finalImageUrl }
-      }).eq('id', editingId);
-
-      if (error) { alert('Error: ' + error.message); return; }
-    } else {
-      const { error } = await supabase.from('organizational_units').insert([{
-        name: newNode.name,
-        type: 'machine',
-        unit_code: newNode.unit_code.padStart(2, '0'),
-        parent_id: selZone,
-        metadata: { ...newNode.metadata, image_url: finalImageUrl },
-        organization_id: 'ae48cff7-49d3-42db-a0bd-b234da043ac1'
-      }]);
-
-      if (error) { alert('Error: ' + error.message); return; }
+    try {
+      if (isEditing && editingId) {
+        const docRef = doc(db, 'hierarchy', editingId);
+        await updateDoc(docRef, {
+          name: newNode.name,
+          unit_code: newNode.unit_code.padStart(2, '0'),
+          parentId: selZone,
+          metadata: { ...newNode.metadata, image_url: finalImageUrl }
+        });
+      } else {
+        await addDoc(collection(db, 'hierarchy'), {
+          name: newNode.name,
+          type: 'instrument',
+          unit_code: newNode.unit_code.padStart(2, '0'),
+          parentId: selZone,
+          metadata: { ...newNode.metadata, image_url: finalImageUrl },
+          tenantId: 'mjm'
+        });
+      }
+    } catch (err: any) {
+      alert('Error: ' + err.message); return;
     }
 
     setIsModalOpen(false);
@@ -461,10 +456,10 @@ export default function AssetsPage() {
         <div>
           <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
             <Zap className="text-amber" size={24} />
-            Gestión de Activos - {brandName}
+            Gestión de Instrumentos - {brandName}
           </h2>
           <p className="text-slate-500 text-sm mt-1">
-            {assets.length} equipos registrados en la estructura
+            {assets.length} instrumentos registrados en la estructura
           </p>
         </div>
         <div className="flex gap-2">
@@ -495,7 +490,7 @@ export default function AssetsPage() {
             }}
             className="px-5 py-2.5 bg-slate-800 text-white font-black rounded-xl shadow-lg hover:bg-black transition-all flex items-center gap-2 text-xs uppercase tracking-widest"
           >
-            <Plus size={16} /> Nuevo Equipo
+            <Plus size={16} /> Nuevo Instrumento
           </button>
         </div>
       </div>
@@ -563,9 +558,9 @@ export default function AssetsPage() {
             <div className="w-24 h-24 bg-slate-50 rounded-3xl flex items-center justify-center mb-6 shadow-inner ring-1 ring-slate-100">
               <Search className="w-10 h-10 text-slate-300" />
             </div>
-            <h3 className="text-xl font-bold text-slate-800 mb-2">No se encontraron equipos</h3>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">No se encontraron instrumentos</h3>
             <p className="text-slate-500 max-w-md mb-8 text-sm font-medium">
-              No hay activos que coincidan con tu búsqueda o filtros actuales. Intenta ajustar los términos.
+              No hay instrumentos que coincidan con tu búsqueda o filtros actuales. Intenta ajustar los términos.
             </p>
             <button 
               onClick={() => { setSearch(''); setStatusFilter('TODOS'); }}
@@ -688,10 +683,10 @@ export default function AssetsPage() {
                <div className="p-2 bg-amber rounded-xl">
                  <Zap className="text-slate-900" size={24} />
                </div>
-               {isEditing ? 'Editar Activo' : 'Registro Técnico de Activo'}
+               {isEditing ? 'Editar Instrumento' : 'Registro Técnico de Instrumento'}
             </h2>
             <p className="text-slate-400 text-xs mb-8">
-              {isEditing ? 'Modifica los parámetros técnicos del equipo' : 'Ingresa los parámetros técnicos para el nuevo equipo'}
+              {isEditing ? 'Modifica los parámetros técnicos del instrumento' : 'Ingresa los parámetros técnicos para el nuevo instrumento'}
             </p>
 
             <div className="grid grid-cols-12 gap-8">
@@ -720,11 +715,11 @@ export default function AssetsPage() {
 
                  <div className="space-y-4">
                     <div>
-                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Nombre del Activo *</label>
+                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Nombre del Instrumento *</label>
                       <input 
                         type="text" 
                         className="w-full px-4 py-3 bg-slate-800 text-white rounded-2xl outline-none focus:ring-4 focus:ring-amber/20 font-bold text-lg transition-all border-none"
-                        placeholder="Ej. Compresor de Tornillo"
+                        placeholder="Ej. Balanza Analítica"
                         value={newNode.name}
                         onChange={e => setNewNode({...newNode, name: e.target.value})}
                       />
@@ -742,7 +737,7 @@ export default function AssetsPage() {
                           />
                         </div>
                     <div className="col-span-2">
-                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Estado del Activo</label>
+                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Estado del Instrumento</label>
                       <div className="grid grid-cols-3 gap-2">
                         {[
                           { id: 'Operativo', label: 'Operativo', icon: Play, color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200' },

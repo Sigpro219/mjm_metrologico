@@ -1,15 +1,37 @@
 'use client';
 
 import Image from 'next/image';
-import { ArrowLeft, Lock, Mail, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { auth } from '@/lib/firebase/config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setErrorMsg('');
+        
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            router.push('/dashboard/assets');
+        } catch (err: any) {
+            console.error("Login Error:", err);
+            setErrorMsg('Credenciales inválidas o error de conexión.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#020406] font-display">
@@ -51,7 +73,7 @@ export default function LoginPage() {
                             <p className="text-[9px] uppercase tracking-[0.5em] text-slate-600 mt-4 font-black uppercase">Metrologia Inteligente</p>
                         </div>
 
-                        <form className="w-full flex flex-col gap-10" onSubmit={e => e.preventDefault()}>
+                        <form className="w-full flex flex-col gap-10" onSubmit={handleLogin}>
                             <div className="flex flex-col gap-3">
                                 <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 ml-1">Email Corporativo</label>
                                 <input 
@@ -59,6 +81,7 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
                                     placeholder="usuario@compañia.com"
+                                    required
                                     className="w-full bg-slate-950/50 border border-white/5 rounded-2xl py-5 px-8 text-sm text-white placeholder:text-slate-800 outline-none focus:border-orange-500 transition-all shadow-inner"
                                 />
                             </div>
@@ -73,13 +96,22 @@ export default function LoginPage() {
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
                                     placeholder="********"
+                                    required
                                     className="w-full bg-slate-950/50 border border-white/5 rounded-2xl py-5 px-8 text-sm text-white placeholder:text-slate-800 outline-none focus:border-orange-500 transition-all shadow-inner"
                                 />
                             </div>
 
+                            {errorMsg && (
+                                <p className="text-red-500 text-[10px] font-black uppercase tracking-widest text-center">{errorMsg}</p>
+                            )}
+
                             <div className="pt-10 flex flex-col gap-12 items-center">
-                                <button className="w-full bg-white text-slate-950 hover:bg-orange-500 hover:text-white py-5 rounded-2xl font-black text-[11px] tracking-[0.5em] uppercase transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-3">
-                                    ACCEDER AL PORTAL <ChevronRight size={14} strokeWidth={3} />
+                                <button 
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full bg-white text-slate-950 hover:bg-orange-500 hover:text-white py-5 rounded-2xl font-black text-[11px] tracking-[0.5em] uppercase transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50"
+                                >
+                                    {loading ? 'AUTENTICANDO...' : 'ACCEDER AL PORTAL'} <ChevronRight size={14} strokeWidth={3} />
                                 </button>
                                 
                                 <div className="flex flex-col items-center gap-6">
@@ -104,3 +136,4 @@ export default function LoginPage() {
         </div>
     );
 }
+

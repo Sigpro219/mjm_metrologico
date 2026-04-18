@@ -1,6 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useNav } from "@/components/providers/NavProvider";
+import { Search, Bell, Menu } from "lucide-react"; // Replaced material-icons to make it visually cleaner if lucide is available. Let's use material-icons to be safe:
 
 interface HeaderProps {
   title?: string;
@@ -12,6 +14,7 @@ export default function Header({
   icon = "dashboard" 
 }: HeaderProps) {
   const pathname = usePathname();
+  const { toggleMobile } = useNav();
   
   const getTitle = () => {
     if (title) return title;
@@ -25,12 +28,21 @@ export default function Header({
   const displayTitle = getTitle();
 
   return (
-    <header className="h-16 bg-white/80 backdrop-blur-md flex items-center justify-between px-8 shadow-[0_1px_3px_rgba(0,0,0,0.02)] shrink-0 z-10 relative border-b border-slate-100">
-      <h1 className="text-xl font-bold text-slate-900 flex items-center gap-3">
-        <span className="material-icons text-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 p-1.5 rounded-lg text-lg hidden sm:block">{icon}</span>
-        <span>{displayTitle}</span>
-      </h1>
-      <div className="flex items-center gap-6">
+    <header className="h-16 bg-white/80 backdrop-blur-md flex items-center justify-between px-4 md:px-8 shadow-[0_1px_3px_rgba(0,0,0,0.02)] shrink-0 z-10 relative border-b border-slate-100">
+      <div className="flex items-center gap-3">
+        <button 
+          onClick={toggleMobile}
+          className="md:hidden p-2 -ml-2 text-slate-800 hover:bg-slate-100 rounded-xl"
+        >
+          <span className="material-icons">menu</span>
+        </button>
+        <h1 className="text-xl font-bold text-slate-900 flex items-center gap-3">
+          <span className="material-icons text-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 p-1.5 rounded-lg text-lg hidden sm:block">{icon}</span>
+          <span className="truncate max-w-[200px] md:max-w-none">{displayTitle}</span>
+        </h1>
+      </div>
+      
+      <div className="flex items-center gap-4 md:gap-6">
         {/* Placeholder Search Bar */}
         <div className="hidden md:flex items-center bg-slate-50 border border-slate-200 rounded-full px-4 py-1.5 focus-within:ring-2 focus-within:ring-[color:var(--color-primary)]/20 focus-within:border-[color:var(--color-primary)] transition-all">
            <span className="material-icons text-slate-400 text-[18px] mr-2">search</span>
