@@ -11,26 +11,79 @@ export default function MaintenanceKanban() {
     const queryClient = useQueryClient();
     const [executingTicket, setExecutingTicket] = useState<MaintenanceTicket | null>(null);
 
-    // Fetch all relevant tickets (not just filtered by month like the calendar)
-    // In a real app we might paginate or filter by "active" state
+    // Fetch all relevant tickets
     const { data: tickets, isLoading } = useQuery({
         queryKey: ['maintenance-tickets', 'kanban'],
-        queryFn: async () => {
-            // ... (rest of queryFn is fine as is, assume existing content)
-            const today = new Date();
-            const start = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString();
-            const end = new Date(today.getFullYear(), today.getMonth() + 2, 0).toISOString();
-            return maintenanceService.getTickets({ startDate: start, endDate: end });
-        },
+        queryFn: () => maintenanceService.getTickets(),
         refetchInterval: 10000
     });
 
-    const pendingTickets = tickets?.filter(t =>
-        (t.status === 'open' || (t.status === 'scheduled' && t.scheduled_date && t.scheduled_date <= new Date().toISOString().split('T')[0]))
-    ) || [];
+    const getTodayStr = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
-    const inProgressTickets = tickets?.filter(t => t.status === 'in_progress') || [];
-    const completedTickets = tickets?.filter(t => t.status === 'completed').slice(0, 10) || []; // Show last 10
+    const get30DaysFromNowStr = () => {
+        const d = new Date();
+        d.setDate(d.getDate() + 30);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const getCurrentWeekRange = () => {
+        const today = new Date();
+        const currentDayOfWeek = today.getDay();
+
+        const start = new Date(today);
+        start.setDate(today.getDate() - currentDayOfWeek);
+        
+        const end = new Date(start);
+        end.setDate(start.getDate() + 7);
+        
+        const formatDate = (d: Date) => {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+        
+        return {
+            startStr: formatDate(start),
+            endStr: formatDate(end)
+        };
+    };
+
+    const todayStr = getTodayStr();
+    const upcomingRange = getCurrentWeekRange();
+    const maxDateStr = get30DaysFromNowStr();
+
+    // 1. Vencidos (scheduled/open and date < today)
+    const overdueTickets = tickets?.filter(t => {
+        const statusValid = t.status === 'open' || t.status === 'scheduled';
+        return statusValid && t.scheduled_date && t.scheduled_date < todayStr;
+    }) || [];
+
+    // 2. Por gestionar (scheduled/open and date > weekEndStr and date <= maxDateStr)
+    const upcomingTickets = tickets?.filter(t => {
+        const statusValid = t.status === 'open' || t.status === 'scheduled';
+        const dateStr = t.scheduled_date || todayStr;
+        return statusValid && dateStr > upcomingRange.endStr && dateStr <= maxDateStr;
+    }) || [];
+
+    // 3. En proceso (scheduled/open and date >= todayStr and date <= weekEndStr)
+    const inProcessTickets = tickets?.filter(t => {
+        const statusValid = t.status === 'open' || t.status === 'scheduled';
+        const dateStr = t.scheduled_date || todayStr;
+        return statusValid && dateStr >= todayStr && dateStr <= upcomingRange.endStr;
+    }) || [];
+
+    // 4. Doing (status is in_progress)
+    const doingTickets = tickets?.filter(t => t.status === 'in_progress') || [];
 
     const startTicketMutation = useMutation({
         mutationFn: ({ id, tech }: { id: string, tech: string }) => maintenanceService.startTicket(id, tech),
@@ -69,6 +122,14 @@ export default function MaintenanceKanban() {
               )}
               <p className="text-xs font-bold text-slate-600 truncate">{ticket.machine?.name}</p>
             </div>
+
+            {ticket.scheduled_date && ticket.status !== 'completed' && (
+                <div className="text-[10px] text-slate-500 mb-3 flex items-center gap-1.5 bg-slate-50/50 p-2 rounded-lg border border-slate-100/50">
+                    <Clock className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="font-bold uppercase tracking-wider text-slate-400">Planificado:</span> 
+                    <span className="font-semibold text-slate-600">{ticket.scheduled_date}</span>
+                </div>
+            )}
 
             {ticket.status === 'in_progress' && (
                 <div className="flex items-center gap-2 text-xs text-blue-700 bg-blue-50/50 p-2 rounded-lg mb-3 border border-blue-100">
@@ -109,80 +170,99 @@ export default function MaintenanceKanban() {
         </div>
     );
 
-    if (isLoading) return <div className="p-10 text-center text-slate-500">Cargando tablero...</div>;
+    if (isLoading) return <div className="p-10 text-center text-slate-500 font-bold uppercase tracking-wider">Cargando tablero...</div>;
 
     return (
-        <div className="flex h-full gap-4 overflow-x-auto p-1">
-            {/* Column 1: To Do */}
-            <div className="flex-1 min-w-[320px] flex flex-col bg-slate-50 rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50">
+        <div className="flex h-full gap-4 overflow-x-auto p-1 bg-slate-50/50">
+            {/* Column 1: Por gestionar */}
+            <div className="flex-1 min-w-[300px] flex flex-col bg-slate-100/50 rounded-2xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-slate-400"></div>
                 <div className="p-4 border-b border-slate-200 bg-white rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
-                    <h3 className="font-black text-slate-800 flex items-center gap-3 text-sm uppercase tracking-widest">
-                        <div className="w-3 h-3 rounded-full bg-red-500 shadow-lg shadow-red-500/30 ring-2 ring-red-100"></div>
-                        Pendientes
+                    <h3 className="font-black text-slate-600 flex items-center gap-3 text-xs uppercase tracking-wider">
+                        <div className="w-2.5 h-2.5 rounded-full bg-slate-400"></div>
+                        Por Gestionar (30 Días)
                     </h3>
                     <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-lg text-xs font-black border border-slate-200">
-                        {pendingTickets.length}
+                        {upcomingTickets.length}
                     </span>
                 </div>
-                <div className="flex-1 p-4 overflow-y-auto bg-slate-50/50">
-                    {pendingTickets.length === 0 && (
+                <div className="flex-1 p-4 overflow-y-auto space-y-3">
+                    {upcomingTickets.length === 0 ? (
                         <div className="h-40 flex flex-col items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 rounded-xl m-2 bg-slate-50">
-                            <CheckCircle className="w-8 h-8 mb-2 opacity-20" />
-                            <span className="text-xs font-bold uppercase tracking-wider">Todo al día</span>
+                            <span className="text-xs font-bold uppercase tracking-wider">Sin actividades</span>
                         </div>
+                    ) : (
+                        upcomingTickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />)
                     )}
-                    {pendingTickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />)}
                 </div>
             </div>
 
-            {/* Column 2: In Progress */}
-            <div className="flex-1 min-w-[320px] flex flex-col bg-blue-50/20 rounded-2xl border border-blue-100 shadow-xl shadow-blue-100/50 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
-                <div className="p-4 border-b border-blue-100 bg-white/80 backdrop-blur-sm rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
-                    <h3 className="font-black text-blue-900 flex items-center gap-3 text-sm uppercase tracking-widest">
-                        <div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse shadow-lg shadow-blue-500/30 ring-2 ring-blue-100"></div>
-                        En Progreso
+            {/* Column 2: En proceso */}
+            <div className="flex-1 min-w-[300px] flex flex-col bg-blue-50/20 rounded-2xl border border-blue-100/80 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
+                <div className="p-4 border-b border-blue-100 bg-white rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
+                    <h3 className="font-black text-blue-700 flex items-center gap-3 text-xs uppercase tracking-wider">
+                        <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.3)]"></div>
+                        En Proceso (Esta Semana)
                     </h3>
                     <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-xs font-black border border-blue-100">
-                        {inProgressTickets.length}
+                        {inProcessTickets.length}
                     </span>
                 </div>
-                <div className="flex-1 p-4 overflow-y-auto bg-blue-50/10">
-                    {inProgressTickets.length === 0 && (
-                        <div className="h-40 flex flex-col items-center justify-center text-blue-300/50 border-2 border-dashed border-blue-100 rounded-xl m-2">
-                            <Clock className="w-8 h-8 mb-2" />
-                            <span className="text-xs font-bold uppercase tracking-wider">Sin actividad</span>
+                <div className="flex-1 p-4 overflow-y-auto space-y-3">
+                    {inProcessTickets.length === 0 ? (
+                        <div className="h-40 flex flex-col items-center justify-center text-blue-300/40 border-2 border-dashed border-blue-100 rounded-xl m-2 bg-white/50">
+                            <span className="text-xs font-bold uppercase tracking-wider">Sin programaciones</span>
                         </div>
+                    ) : (
+                        inProcessTickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />)
                     )}
-                    {inProgressTickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />)}
                 </div>
             </div>
 
-            {/* Column 3: Done */}
-            <div className="flex-1 min-w-[320px] flex flex-col bg-slate-50/50 rounded-2xl border border-slate-200 opacity-90">
-                <div className="p-4 border-b border-slate-200 bg-white/50 rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
-                    <h3 className="font-black text-slate-500 flex items-center gap-3 text-sm uppercase tracking-widest">
-                        <div className="w-3 h-3 rounded-full bg-green-500 shadow-lg shadow-green-500/30 ring-2 ring-green-100"></div>
-                        Finalizados
+            {/* Column 3: Doing */}
+            <div className="flex-1 min-w-[300px] flex flex-col bg-amber-50/20 rounded-2xl border border-amber-100/80 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-amber-500"></div>
+                <div className="p-4 border-b border-amber-100 bg-white rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
+                    <h3 className="font-black text-amber-700 flex items-center gap-3 text-xs uppercase tracking-wider">
+                        <div className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.3)]"></div>
+                        Doing (En Ejecución)
                     </h3>
-                    <span className="bg-slate-100 text-slate-500 px-3 py-1 rounded-lg text-xs font-black border border-slate-200">
-                        {completedTickets.length}
+                    <span className="bg-amber-50 text-amber-700 px-3 py-1 rounded-lg text-xs font-black border border-amber-100">
+                        {doingTickets.length}
                     </span>
                 </div>
-                <div className="flex-1 p-4 overflow-y-auto">
-                    {completedTickets.map(ticket => (
-                        <div key={ticket.id} className="p-4 bg-white border border-slate-100 rounded-xl mb-3 opacity-60 hover:opacity-100 transition-all hover:shadow-md group">
-                            <div className="flex justify-between mb-2">
-                                <span className="text-xs font-bold text-slate-400 line-through group-hover:no-underline group-hover:text-slate-700 transition-colors">{ticket.title}</span>
-                                <CheckCircle className="w-4 h-4 text-green-500" />
-                            </div>
-                            <div className="text-[10px] text-slate-400 flex gap-2 font-medium uppercase tracking-wider">
-                                <span>{ticket.machine?.name}</span>
-                                <span>•</span>
-                                <span>{ticket.assigned_to}</span>
-                            </div>
+                <div className="flex-1 p-4 overflow-y-auto space-y-3">
+                    {doingTickets.length === 0 ? (
+                        <div className="h-40 flex flex-col items-center justify-center text-amber-400/40 border-2 border-dashed border-amber-100 rounded-xl m-2 bg-white/50">
+                            <span className="text-xs font-bold uppercase tracking-wider">Ninguna en ejecución</span>
                         </div>
-                    ))}
+                    ) : (
+                        doingTickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />)
+                    )}
+                </div>
+            </div>
+
+            {/* Column 4: Vencidos */}
+            <div className="flex-1 min-w-[300px] flex flex-col bg-red-50/10 rounded-2xl border border-red-200/50 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
+                <div className="p-4 border-b border-red-100/60 bg-white rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
+                    <h3 className="font-black text-red-600 flex items-center gap-3 text-xs uppercase tracking-wider">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]"></div>
+                        Vencidos
+                    </h3>
+                    <span className="bg-red-50 text-red-600 px-3 py-1 rounded-lg text-xs font-black border border-red-100">
+                        {overdueTickets.length}
+                    </span>
+                </div>
+                <div className="flex-1 p-4 overflow-y-auto space-y-3">
+                    {overdueTickets.length === 0 ? (
+                        <div className="h-40 flex flex-col items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 rounded-xl m-2 bg-slate-50">
+                            <span className="text-xs font-bold uppercase tracking-wider">Sin retrasos</span>
+                        </div>
+                    ) : (
+                        overdueTickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />)
+                    )}
                 </div>
             </div>
 

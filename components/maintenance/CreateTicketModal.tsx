@@ -24,7 +24,6 @@ export default function CreateTicketModal({ isOpen, onClose, date }: CreateTicke
     // Recurrencia
     const [isRecurring, setIsRecurring] = useState(false);
     const [frequency, setFrequency] = useState<'weekly' | 'monthly' | 'quarterly' | 'semiannual' | 'annual'>('monthly');
-    const [occurrences, setOccurrences] = useState(1);
 
     // Fetch Machines
     const { data: machines } = useQuery({
@@ -42,13 +41,24 @@ export default function CreateTicketModal({ isOpen, onClose, date }: CreateTicke
             setPriority('medium');
             setIsRecurring(false);
             setFrequency('monthly');
-            setOccurrences(1);
         }
     }, [isOpen]);
 
-    const calculateDates = (startDate: Date, freq: string, count: number) => {
+    const getOccurrenceCount = (freq: 'weekly' | 'monthly' | 'quarterly' | 'semiannual' | 'annual') => {
+        switch (freq) {
+            case 'weekly': return 260;
+            case 'monthly': return 60;
+            case 'quarterly': return 20;
+            case 'semiannual': return 10;
+            case 'annual': return 5;
+            default: return 1;
+        }
+    };
+
+    const calculateDates = (startDate: Date, freq: string, isRecur: boolean) => {
         const dates = [];
-        const current = new Date(startDate); // copia para no mutar
+        const current = new Date(startDate);
+        const count = isRecur ? getOccurrenceCount(freq as any) : 1;
 
         for (let i = 0; i < count; i++) {
             dates.push(new Date(current));
@@ -69,15 +79,16 @@ export default function CreateTicketModal({ isOpen, onClose, date }: CreateTicke
         mutationFn: async () => {
             if (!date || !machineId) return;
 
-            const count = isRecurring ? Math.max(1, Math.min(12, occurrences)) : 1;
-            const targetDates = calculateDates(date, frequency, count);
+            const targetDates = calculateDates(date, frequency, isRecurring);
 
             // Map dates to ticket objects
-            const ticketsToCreate = targetDates.map(d => {
+            const ticketsToCreate = targetDates.map((d, index) => {
                 const year = d.getFullYear();
                 const month = String(d.getMonth() + 1).padStart(2, '0');
                 const day = String(d.getDate()).padStart(2, '0');
                 const dateStr = `${year}-${month}-${day}`;
+
+                const isLast = isRecurring && index === targetDates.length - 1;
 
                 return {
                     title,
@@ -87,7 +98,8 @@ export default function CreateTicketModal({ isOpen, onClose, date }: CreateTicke
                     type: 'preventive' as const,
                     status: 'scheduled' as const,
                     scheduled_date: dateStr,
-                    organization_id: organization?.id || '00000000-0000-0000-0000-000000000001' // Dynamic from Tenant
+                    organization_id: organization?.id || '00000000-0000-0000-0000-000000000001', // Dynamic from Tenant
+                    is_last_of_5_years: isLast ? true : undefined
                 };
             });
 
@@ -182,34 +194,24 @@ export default function CreateTicketModal({ isOpen, onClose, date }: CreateTicke
                             </div>
 
                             {isRecurring && (
-                                <div className="grid grid-cols-2 gap-4 animate-in slide-in-from-top-2 duration-200">
+                                <div className="space-y-3 mt-3 animate-in slide-in-from-top-2 duration-200">
                                     <div>
                                         <label className="block text-xs font-medium text-slate-500 mb-1">Frecuencia</label>
                                         <select
-                                            className="w-full p-2 border border-slate-200 rounded-lg text-sm"
+                                            className="w-full p-2 border border-slate-200 rounded-lg text-sm bg-white"
                                             value={frequency}
                                             onChange={(e) => setFrequency(e.target.value as any)}
                                         >
-                                            <option value="weekly">Semanal</option>
-                                            <option value="monthly">Mensual</option>
-                                            <option value="quarterly">Trimestral</option>
-                                            <option value="semiannual">Semestral</option>
-                                            <option value="annual">Anual</option>
+                                            <option value="weekly">Semanal (260 actividades)</option>
+                                            <option value="monthly">Mensual (60 actividades)</option>
+                                            <option value="quarterly">Trimestral (20 actividades)</option>
+                                            <option value="semiannual">Semestral (10 actividades)</option>
+                                            <option value="annual">Anual (5 actividades)</option>
                                         </select>
                                     </div>
-                                    <div>
-                                        <label className="block text-xs font-medium text-slate-500 mb-1">Repeticiones (1-12)</label>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            max="12"
-                                            value={occurrences}
-                                            onChange={(e) => setOccurrences(parseInt(e.target.value))}
-                                            className="w-full p-2 border border-slate-200 rounded-lg text-sm"
-                                        />
-                                    </div>
-                                    <div className="col-span-2 text-xs text-blue-600 bg-blue-50 p-2 rounded">
-                                        Se crearán <strong>{occurrences}</strong> actividades empezando el {date.toLocaleDateString()}.
+                                    <div className="text-xs text-blue-600 bg-blue-50/70 p-3 rounded-lg border border-blue-100 flex flex-col gap-1 animate-in fade-in duration-300">
+                                        <span>Se programarán automáticamente <strong>{getOccurrenceCount(frequency)}</strong> actividades durante los próximos 5 años.</span>
+                                        <span className="text-slate-500 text-[10px]">Primera fecha: {date.toLocaleDateString('es-ES')}. La última actividad alertará del fin del ciclo.</span>
                                     </div>
                                 </div>
                             )}
@@ -267,7 +269,7 @@ export default function CreateTicketModal({ isOpen, onClose, date }: CreateTicke
                             disabled={createMutation.isPending}
                             className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200 disabled:opacity-50"
                         >
-                            {createMutation.isPending ? `Programar ${isRecurring && occurrences > 1 ? `(${occurrences})` : ''}` : 'Guardando...'}
+                            {createMutation.isPending ? 'Guardando...' : `Programar ${isRecurring ? `(${getOccurrenceCount(frequency)})` : ''}`}
                         </button>
                     </div>
                 </form>

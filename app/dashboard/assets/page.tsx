@@ -273,7 +273,7 @@ export default function AssetsPage() {
       return path.reverse();
     };
 
-    const path = findHierarchyPath(asset.parent_id);
+    const path = findHierarchyPath(asset.parentId);
     const client = path.find(n => n.type === 'client');
     const city = path.find(n => n.type === 'city');
     const site = path.find(n => n.type === 'cell');
@@ -400,9 +400,9 @@ export default function AssetsPage() {
 
                 const payload = {
                     name: String(row.NOMBRE),
-                    type: 'machine',
+                    type: 'instrument',
                     unit_code: row.CODIGO ? String(row.CODIGO).padStart(2, '0') : '00',
-                    parent_id: null,
+                    parentId: null,
                     metadata: {
                         brand: String(row.MARCA || ''),
                         model: String(row.MODELO || ''),
@@ -415,15 +415,15 @@ export default function AssetsPage() {
                         purchase_date: row.FECHA_COMPRA || '',
                         image_url: ''
                     },
-                    organization_id: 'ae48cff7-49d3-42db-a0bd-b234da043ac1'
+                    tenantId: 'mjm'
                 };
 
-                const { error } = await supabase.from('organizational_units').insert([payload]);
-                if (error) {
-                    console.error("Row error:", error);
-                    errors++;
-                } else {
+                try {
+                    await addDoc(collection(db, 'hierarchy'), payload);
                     success++;
+                } catch (err) {
+                    console.error("Row error:", err);
+                    errors++;
                 }
             }
 

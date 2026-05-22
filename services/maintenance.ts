@@ -23,6 +23,8 @@ export const maintenanceService = {
     machineId?: string; // Kept as machineId for now in parameters to avoid breaking frontend calls immediately
     startDate?: string;
     endDate?: string;
+    limitCount?: number;
+    isLastOf5Years?: boolean;
   }) {
     // 1. Fetch tickets from 'activities' collection
     const ticketsRef = collection(db, "maintenance_tickets"); // Using maintenance_tickets or activities? Let's assume maintenance_tickets exists or I'll create it.
@@ -33,6 +35,8 @@ export const maintenanceService = {
     if (filters?.machineId) q = firestoreQuery(q, where("machine_id", "==", filters.machineId));
     if (filters?.startDate) q = firestoreQuery(q, where("scheduled_date", ">=", filters.startDate));
     if (filters?.endDate) q = firestoreQuery(q, where("scheduled_date", "<=", filters.endDate));
+    if (filters?.limitCount) q = firestoreQuery(q, limit(filters.limitCount));
+    if (filters?.isLastOf5Years !== undefined) q = firestoreQuery(q, where("is_last_of_5_years", "==", filters.isLastOf5Years));
 
     const querySnapshot = await getDocs(q);
     const ticketsData = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() })) as any[];

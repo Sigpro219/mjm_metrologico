@@ -11,6 +11,7 @@ import {
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
 import { SaaSSection } from '@/components/SaaSSection'
+import { DEFAULT_SITE_SETTINGS } from '@/lib/constants'
 
 export default function Home() {
     const [teamImage, setTeamImage] = useState('/about/team-cimga.jpg')

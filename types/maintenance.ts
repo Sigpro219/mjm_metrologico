@@ -27,6 +27,7 @@ export type MaintenanceTicket = {
     code: string;
     location: string;
   };
+  is_last_of_5_years?: boolean;
 };
 
 export type MaintenancePlan = {
