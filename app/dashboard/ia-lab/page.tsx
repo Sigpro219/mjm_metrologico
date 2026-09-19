@@ -23,6 +23,7 @@ import {
   X
 } from 'lucide-react';
 import { useTenant } from '@/components/providers/TenantProvider';
+import { analyzeMetrologyCertificateWithGemini, ExtractedMetrologyData } from '@/lib/geminiMetrologyService';
 
 interface CalibrationPoint {
   nominal: number;
@@ -43,6 +44,10 @@ interface ExtractedData {
   calibrationDate: string;
   laboratoryName: string;
   laboratoryType: 'Acreditado' | 'Trazable';
+  normaReferencia?: string;
+  veredicto?: 'Conforme' | 'No Conforme' | 'Zona de Duda';
+  dictamenParrafo?: string;
+  aptitudUso?: string;
   points: CalibrationPoint[];
 }
 
@@ -111,91 +116,29 @@ export default function IALabPage() {
     setRegistrationSuccess(null);
   };
 
-  // Simulate Gemini Multimodal OCR & Metrological Parsing
-  const handleStartParsing = () => {
+  // Conexión real con Google Gemini 3.6 Flash para interpretación metrológica multimodal
+  const handleStartParsing = async () => {
     if (!selectedFile) return;
 
     setIsParsing(true);
-    setParsingProgress(10);
+    setParsingProgress(15);
 
     const interval = setInterval(() => {
-      setParsingProgress(prev => {
-        if (prev >= 95) {
-          clearInterval(interval);
-          return 95;
-        }
-        return prev + Math.floor(Math.random() * 20) + 5;
-      });
-    }, 400);
+      setParsingProgress(prev => (prev >= 90 ? 90 : prev + 15));
+    }, 500);
 
-    setTimeout(() => {
+    try {
+      const realData = await analyzeMetrologyCertificateWithGemini(selectedFile);
       clearInterval(interval);
       setParsingProgress(100);
-      
-      // Analyze file name for high-fidelity simulation
-      const filename = selectedFile.name.toLowerCase();
-      let mockResult: ExtractedData;
-
-      if (filename.includes('micrometro') || filename.includes('metrotest')) {
-        mockResult = {
-          instrumentName: 'Micrómetro Exterior Digital',
-          serial: 'MT-2026-99',
-          brand: 'Mitutoyo',
-          model: 'MDC-25SX',
-          capacity: '0-25 mm',
-          certificateNumber: 'CERT-2026-8849',
-          calibrationDate: '2026-05-15',
-          laboratoryName: 'Metrología Avanzada S.A.S. (Acreditado ONAC 17-LAC-009)',
-          laboratoryType: 'Acreditado',
-          points: [
-            { nominal: 5.0, reference: 5.000, measured: 5.002, uncertainty: 0.001, emp: 0.004, unit: 'mm' },
-            { nominal: 10.0, reference: 10.000, measured: 10.003, uncertainty: 0.001, emp: 0.004, unit: 'mm' },
-            { nominal: 15.0, reference: 15.000, measured: 15.005, uncertainty: 0.001, emp: 0.004, unit: 'mm' }, // Fail: Error (0.005) + Uncertainty (0.001) = 0.006 > 0.004 EMP
-            { nominal: 20.0, reference: 20.000, measured: 20.001, uncertainty: 0.001, emp: 0.004, unit: 'mm' },
-            { nominal: 25.0, reference: 25.000, measured: 25.002, uncertainty: 0.001, emp: 0.004, unit: 'mm' }
-          ]
-        };
-      } else if (filename.includes('lt-1919') || filename.includes('lt-1918') || filename.includes('termometro')) {
-        mockResult = {
-          instrumentName: 'Termómetro Digital Lutron',
-          serial: 'LT-1919-SN',
-          brand: 'Lutron',
-          model: 'TM-917',
-          capacity: '-50 a 350 °C',
-          certificateNumber: 'LC-993821',
-          calibrationDate: '2026-04-20',
-          laboratoryName: 'Laboratorio de Temperatura del Sur S.A.',
-          laboratoryType: 'Trazable',
-          points: [
-            { nominal: 0.0, reference: 0.00, measured: 0.05, uncertainty: 0.10, emp: 0.50, unit: '°C' },
-            { nominal: 100.0, reference: 100.00, measured: 99.85, uncertainty: 0.10, emp: 0.50, unit: '°C' },
-            { nominal: 200.0, reference: 200.00, measured: 200.20, uncertainty: 0.15, emp: 0.50, unit: '°C' }
-          ]
-        };
-      } else {
-        // Generic fallback with simulated OCR
-        const cleanName = selectedFile.name.replace(/\.[^/.]+$/, "").replace(/_/g, ' ');
-        mockResult = {
-          instrumentName: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
-          serial: 'SN-' + Math.floor(100000 + Math.random() * 900000),
-          brand: 'Calibration Standard',
-          model: 'CS-100',
-          capacity: '100 units',
-          certificateNumber: 'CERT-' + Math.floor(10000 + Math.random() * 90000),
-          calibrationDate: new Date().toISOString().split('T')[0],
-          laboratoryName: 'Control de Calidad Global S.A.',
-          laboratoryType: 'Acreditado',
-          points: [
-            { nominal: 10.0, reference: 10.00, measured: 10.02, uncertainty: 0.01, emp: 0.05, unit: 'units' },
-            { nominal: 50.0, reference: 50.00, measured: 50.03, uncertainty: 0.01, emp: 0.05, unit: 'units' },
-            { nominal: 100.0, reference: 100.00, measured: 99.98, uncertainty: 0.02, emp: 0.05, unit: 'units' }
-          ]
-        };
-      }
-
-      setExtractedData(mockResult);
+      setExtractedData(realData);
+    } catch (err: any) {
+      clearInterval(interval);
+      console.error("Error analizando con Gemini:", err);
+      alert("Error procesando certificado con Gemini: " + (err.message || 'Error desconocido'));
+    } finally {
       setIsParsing(false);
-    }, 2500);
+    }
   };
 
   // Perform Auto-Registration in Firestore
@@ -274,16 +217,26 @@ export default function IALabPage() {
 
   const getOverallVerdict = () => {
     if (!extractedData) return null;
-    const evaluations = extractedData.points.map(evaluatePoint);
-    const hasFail = evaluations.some(ev => !ev.isCompliant);
+    const isNoConforme = extractedData.veredicto === 'No Conforme';
+    const isDuda = extractedData.veredicto === 'Zona de Duda';
+    const hasFail = isNoConforme || (extractedData.points.length > 0 && extractedData.points.some(pt => !evaluatePoint(pt).isCompliant));
+
     return {
-      status: hasFail ? 'NO_CONFORME' : 'CONFORME',
-      text: hasFail ? 'No Conforme (ISO 10012)' : 'Conforme',
-      colorClass: hasFail ? 'text-red-500 bg-red-50 border-red-200' : 'text-green-600 bg-green-50 border-green-200',
-      badgeClass: hasFail ? 'bg-red-500 text-white' : 'bg-green-500 text-white',
-      desc: hasFail 
-        ? 'El instrumento presenta desviaciones fuera de la tolerancia metrológica establecida más su incertidumbre expandida.' 
-        : 'El instrumento cumple satisfactoriamente con la tolerancia especificada bajo la norma ISO 10012:2026.'
+      status: isNoConforme || hasFail ? 'NO_CONFORME' : isDuda ? 'ZONA_DE_DUDA' : 'CONFORME',
+      text: isNoConforme || hasFail 
+        ? 'No Conforme (Reprobado)' 
+        : isDuda 
+        ? 'Zona de Duda (Indeterminación / Guard Band)' 
+        : 'Conforme (Aprobado)',
+      colorClass: isNoConforme || hasFail 
+        ? 'text-red-700 bg-red-50 border-red-200' 
+        : isDuda 
+        ? 'text-amber-800 bg-amber-50 border-amber-200' 
+        : 'text-green-700 bg-green-50 border-green-200',
+      badgeClass: isNoConforme || hasFail ? 'bg-red-500 text-white' : isDuda ? 'bg-amber-500 text-white' : 'bg-green-500 text-white',
+      desc: extractedData.dictamenParrafo || (isNoConforme || hasFail
+        ? 'El instrumento presenta desviaciones fuera de la tolerancia metrológica admisible más su incertidumbre expandida (U).' 
+        : 'El instrumento cumple satisfactoriamente con la tolerancia especificada bajo las normas ISO/IEC 17025 e ISO 10012.')
     };
   };
 
@@ -565,7 +518,7 @@ export default function IALabPage() {
               {/* Overall Verdict Card */}
               {verdict && (
                 <div className={`p-6 rounded-3xl border space-y-4 ${verdict.colorClass}`}>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
                     <div className="flex items-center gap-3">
                       <div className={`p-2 rounded-xl ${verdict.badgeClass}`}>
                         {verdict.status === 'CONFORME' ? (
@@ -575,12 +528,23 @@ export default function IALabPage() {
                         )}
                       </div>
                       <div>
-                        <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Dictamen Final de Conformidad</p>
+                        <p className="text-[10px] font-black uppercase tracking-wider opacity-70">
+                          Dictamen Metrológico Oficial {extractedData.normaReferencia ? `· ${extractedData.normaReferencia}` : ''}
+                        </p>
                         <h4 className="text-lg font-black tracking-tight">{verdict.text}</h4>
                       </div>
                     </div>
+                    {extractedData.aptitudUso && (
+                      <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-lg bg-black/10">
+                        {extractedData.aptitudUso}
+                      </span>
+                    )}
                   </div>
-                  <p className="text-xs font-semibold leading-relaxed opacity-90">{verdict.desc}</p>
+                  <div className="p-4 bg-white/80 rounded-2xl border border-black/5 shadow-sm">
+                    <p className="text-xs font-medium leading-relaxed text-slate-800">
+                      {verdict.desc}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
