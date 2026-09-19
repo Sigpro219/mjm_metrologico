@@ -24,8 +24,10 @@ import CreateTicketModal from "@/components/maintenance/CreateTicketModal";
 import MaintenanceKanban from "@/components/maintenance/MaintenanceKanban";
 import MaintenanceMetrics from "@/components/maintenance/MaintenanceMetrics";
 import type { MaintenanceTicket } from "@/types/maintenance";
+import { useTenant } from "@/components/providers/TenantProvider";
 
 export default function MaintenancePage() {
+  const { tenantId } = useTenant();
   const [viewMode, setViewMode] = useState<"calendar" | "board" | "metrics">(
     "board",
   );
@@ -78,9 +80,9 @@ export default function MaintenancePage() {
 
   // 1. Monthly Tickets (Calendar view)
   const { data: tickets, error: ticketsError } = useQuery({
-    queryKey: ["maintenance-tickets", "monthly", monthStartStr, monthEndStr],
+    queryKey: ["maintenance-tickets", "monthly", monthStartStr, monthEndStr, tenantId],
     queryFn: () =>
-      maintenanceService.getTickets({
+      maintenanceService.getTickets(tenantId || "mjm", {
         type: "preventive",
         startDate: monthStartStr,
         endDate: monthEndStr,
@@ -90,9 +92,9 @@ export default function MaintenancePage() {
 
   // 2. Upcoming 5 Events (Query limited from today onwards)
   const { data: upcomingEventsRaw, error: upcomingError } = useQuery({
-    queryKey: ["maintenance-tickets", "upcoming-raw", todayStr],
+    queryKey: ["maintenance-tickets", "upcoming-raw", todayStr, tenantId],
     queryFn: () =>
-      maintenanceService.getTickets({
+      maintenanceService.getTickets(tenantId || "mjm", {
         startDate: todayStr,
         limitCount: 20,
       }),
@@ -101,9 +103,9 @@ export default function MaintenancePage() {
 
   // 3. Overdue Alerts (Scheduled and Open tickets with dates in the past)
   const { data: overdueScheduled, error: overdueScheduledError } = useQuery({
-    queryKey: ["maintenance-tickets", "overdue-scheduled", yesterdayStr],
+    queryKey: ["maintenance-tickets", "overdue-scheduled", yesterdayStr, tenantId],
     queryFn: () =>
-      maintenanceService.getTickets({
+      maintenanceService.getTickets(tenantId || "mjm", {
         status: "scheduled",
         endDate: yesterdayStr,
       }),
@@ -111,9 +113,9 @@ export default function MaintenancePage() {
   });
 
   const { data: overdueOpen, error: overdueOpenError } = useQuery({
-    queryKey: ["maintenance-tickets", "overdue-open", yesterdayStr],
+    queryKey: ["maintenance-tickets", "overdue-open", yesterdayStr, tenantId],
     queryFn: () =>
-      maintenanceService.getTickets({
+      maintenanceService.getTickets(tenantId || "mjm", {
         status: "open",
         endDate: yesterdayStr,
       }),
@@ -122,9 +124,9 @@ export default function MaintenancePage() {
 
   // 4. End of Cycle Alerts (5-year routines)
   const { data: endOfCycleRaw, error: endOfCycleError } = useQuery({
-    queryKey: ["maintenance-tickets", "end-of-cycle"],
+    queryKey: ["maintenance-tickets", "end-of-cycle", tenantId],
     queryFn: () =>
-      maintenanceService.getTickets({
+      maintenanceService.getTickets(tenantId || "mjm", {
         isLastOf5Years: true,
       }),
     enabled: viewMode === "calendar",

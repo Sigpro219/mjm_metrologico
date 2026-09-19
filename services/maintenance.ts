@@ -10,14 +10,15 @@ import {
   orderBy,
   limit,
   Timestamp,
-  doc as firestoreDoc
+  doc as firestoreDoc,
+  writeBatch
 } from "firebase/firestore";
 import type { MaintenanceTicket, MaintenancePlan, DowntimeReason } from "@/types/maintenance";
 
 export const maintenanceService = {
   // --- Tickets ---
 
-  async getTickets(filters?: {
+  async getTickets(tenantId: string, filters?: {
     status?: string;
     type?: string;
     machineId?: string; // Kept as machineId for now in parameters to avoid breaking frontend calls immediately
@@ -26,9 +27,9 @@ export const maintenanceService = {
     limitCount?: number;
     isLastOf5Years?: boolean;
   }) {
-    // 1. Fetch tickets from 'activities' collection
-    const ticketsRef = collection(db, "maintenance_tickets"); // Using maintenance_tickets or activities? Let's assume maintenance_tickets exists or I'll create it.
-    let q = firestoreQuery(ticketsRef, orderBy("scheduled_date", "asc"));
+    // 1. Fetch tickets from 'maintenance_tickets' collection
+    const ticketsRef = collection(db, "maintenance_tickets");
+    let q = firestoreQuery(ticketsRef, where("tenantId", "==", tenantId), orderBy("scheduled_date", "asc"));
 
     if (filters?.status) q = firestoreQuery(q, where("status", "==", filters.status));
     if (filters?.type) q = firestoreQuery(q, where("type", "==", filters.type));
@@ -82,16 +83,23 @@ export const maintenanceService = {
     return { id: docRef.id, ...ticket };
   },
 
-  async createTickets(tickets: Partial<MaintenanceTicket>[]) {
+  async createTickets(tickets: Partial<MaintenanceTicket>[], tenantId: string = 'mjm') {
     const results = [];
+    const batch = writeBatch(db);
+    const collectionRef = collection(db, "maintenance_tickets");
+    
     for (const ticket of tickets) {
-      const docRef = await addDoc(collection(db, "maintenance_tickets"), {
+      const docRef = firestoreDoc(collectionRef);
+      const ticketData = {
         ...ticket,
         created_at: new Date().toISOString(),
-        tenantId: 'mjm'
-      });
-      results.push({ id: docRef.id, ...ticket });
+        tenantId: tenantId
+      };
+      batch.set(docRef, ticketData);
+      results.push({ id: docRef.id, ...ticketData });
     }
+    
+    await batch.commit();
     return results;
   },
 

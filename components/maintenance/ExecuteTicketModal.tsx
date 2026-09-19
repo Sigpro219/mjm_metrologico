@@ -53,31 +53,39 @@ export default function ExecuteTicketModal({ isOpen, onClose, ticket }: ExecuteT
     if (!isOpen || !ticket) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4 backdrop-blur-sm">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 bg-secondary/60 flex items-center justify-center z-[100] p-4 backdrop-blur-md">
+            <div className="bg-white rounded-[2.5rem] p-10 w-full max-w-xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200 max-h-[90vh]">
 
                 {/* Header */}
-                <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-green-50 shrink-0">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-green-100 rounded-lg text-green-600">
-                            <Save className="w-5 h-5" />
+                <div className="mb-8 flex justify-between items-start">
+                    <div>
+                        <h2 className="text-2xl font-black text-slate-800 tracking-tight mb-2">Finalizar Mantenimiento</h2>
+                        <div className="inline-block bg-[var(--primary)]/10 border border-[var(--primary)]/30 px-3 py-1.5 rounded-lg mb-2">
+                            <span className="text-[11px] font-black uppercase tracking-widest text-[var(--primary)] mix-blend-multiply">
+                                ID: {ticket.machine?.code || 'MJM-001'}
+                            </span>
                         </div>
-                        <div>
-                            <h2 className="text-lg font-bold text-slate-800">Finalizar Mantenimiento</h2>
-                            <p className="text-sm text-slate-500">{ticket.machine?.name}</p>
-                        </div>
+                        <p className="text-sm font-bold text-slate-500">{ticket.machine?.name}</p>
                     </div>
-                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
-                        <X className="w-6 h-6" />
+                    <button onClick={onClose} className="p-2 bg-slate-100 text-slate-400 hover:text-slate-800 hover:bg-slate-200 rounded-full transition-colors">
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 <div className="overflow-y-auto p-6 space-y-5">
                     {/* Ticket Info */}
-                    <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                        <span className="text-xs font-bold text-slate-400 uppercase">Actividad Programada</span>
-                        <p className="font-medium text-slate-800">{ticket.title}</p>
-                        {ticket.description && <p className="text-sm text-slate-500 mt-1">{ticket.description}</p>}
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Actividad Programada</span>
+                        <p className="font-bold text-slate-800 mt-1">{ticket.title}</p>
+                        <div className="mt-3 flex items-center gap-2">
+                            <span className="text-xs font-bold text-slate-500">Fecha de ejecución:</span>
+                            <input 
+                                type="text" 
+                                className="font-data text-xs bg-white px-2 py-1 border border-slate-200 rounded text-slate-700 w-28 text-center"
+                                value={new Date().toISOString().split('T')[0]}
+                                readOnly
+                            />
+                        </div>
                     </div>
 
                     {/* Work Description */}
@@ -145,41 +153,46 @@ export default function ExecuteTicketModal({ isOpen, onClose, ticket }: ExecuteT
                     </div>
 
                     {/* Received By */}
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Recibido Por (Operador/Supervisor) *
+                    <div className="mb-4">
+                        <label className="block text-[11px] font-black text-slate-600 uppercase tracking-widest mb-2">
+                            Ejecutó *
                         </label>
                         <input
                             type="text"
-                            className="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm"
-                            placeholder="Nombre de quien valida el trabajo"
+                            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[var(--primary)] focus:bg-white outline-none text-sm transition-all font-medium"
+                            placeholder="Nombre del técnico responsable"
                             value={receivedBy}
                             onChange={(e) => setReceivedBy(e.target.value)}
                             required
                         />
                     </div>
 
-                    <div className="flex items-start gap-2 p-3 bg-yellow-50 text-yellow-700 rounded-lg text-xs">
-                        <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
-                        <p>Esta acción cerrará el ticket y registrará el consumo de repuestos.</p>
+                    <div className="mb-4">
+                        <label className="block text-[11px] font-black text-slate-600 uppercase tracking-widest mb-2">
+                            Cargar Soporte Documental
+                        </label>
+                        <input
+                            type="file"
+                            className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm transition-all font-medium file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-[var(--primary)] file:text-slate-800 hover:file:bg-[var(--primary)]/80"
+                        />
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
+                <div className="mt-8 flex justify-end gap-3 shrink-0">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2 text-slate-600 font-medium hover:bg-slate-200 rounded-lg transition-colors"
+                        className="px-6 py-3 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
                     >
                         Cancelar
                     </button>
                     <button
                         onClick={() => executeMutation.mutate()}
                         disabled={executeMutation.isPending || !description.trim() || !receivedBy.trim()}
-                        className="px-6 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors shadow-sm shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="btn-primary"
                     >
-                        {executeMutation.isPending ? 'Guardando...' : 'Confirmar Ejecución'}
+                        {executeMutation.isPending ? 'Guardando...' : 'FINALIZAR'}
                     </button>
                 </div>
             </div>

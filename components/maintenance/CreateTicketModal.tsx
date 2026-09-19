@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { machineService } from '@/services/machines';
 import { maintenanceService } from '@/services/maintenance';
 import { useTenant } from '@/components/providers/TenantProvider';
+import { addWeeks, addMonths, addYears } from 'date-fns';
 
 interface CreateTicketModalProps {
     isOpen: boolean;
@@ -57,19 +58,19 @@ export default function CreateTicketModal({ isOpen, onClose, date }: CreateTicke
 
     const calculateDates = (startDate: Date, freq: string, isRecur: boolean) => {
         const dates = [];
-        const current = new Date(startDate);
+        let current = new Date(startDate);
         const count = isRecur ? getOccurrenceCount(freq as any) : 1;
 
         for (let i = 0; i < count; i++) {
             dates.push(new Date(current));
 
-            // Incrementar fecha según frecuencia
+            // Incrementar fecha usando date-fns para manejar saltos de bisiestos y fines de mes
             switch (freq) {
-                case 'weekly': current.setDate(current.getDate() + 7); break;
-                case 'monthly': current.setMonth(current.getMonth() + 1); break;
-                case 'quarterly': current.setMonth(current.getMonth() + 3); break;
-                case 'semiannual': current.setMonth(current.getMonth() + 6); break;
-                case 'annual': current.setFullYear(current.getFullYear() + 1); break;
+                case 'weekly': current = addWeeks(current, 1); break;
+                case 'monthly': current = addMonths(current, 1); break;
+                case 'quarterly': current = addMonths(current, 3); break;
+                case 'semiannual': current = addMonths(current, 6); break;
+                case 'annual': current = addYears(current, 1); break;
             }
         }
         return dates;

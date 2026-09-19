@@ -363,13 +363,12 @@ export default function AssetsPage() {
   };
 
   const handleDownloadTemplate = () => {
-    const headers = [
-      ['NOMBRE', 'CODIGO', 'MARCA', 'MODELO', 'SERIE', 'CAPACIDAD', 'FUENTE_ENERGIA', 'ANO_FAB', 'FECHA_COMPRA', 'ESTADO', 'CRITICIDAD']
-    ];
-    const ws = XLSX.utils.aoa_to_sheet(headers);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Plantilla Activos");
-    XLSX.writeFile(wb, "plantilla_carga_masiva_activos.xlsx");
+    const link = document.createElement("a");
+    link.href = "/plantilla_carga_masiva_activos.xlsx";
+    link.download = "plantilla_carga_masiva_activos.xlsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

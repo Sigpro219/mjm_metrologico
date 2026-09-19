@@ -161,87 +161,46 @@ export default function Home() {
     }, [])
 
     return (
-        <div style={{ backgroundColor: '#fafafa' }}>
+        <div className="bg-slate-50/30">
             {/* 1. Hero */}
-            <section style={{
-                minHeight: '90vh',
-                display: 'flex',
-                alignItems: 'center',
-                background: 'linear-gradient(135deg, rgba(47,66,62,0.68) 0%, rgba(99,155,179,0.55) 100%), url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80") no-repeat center center/cover',
-                color: 'white',
-                padding: '120px 6% 80px 6%',
-                position: 'relative',
-                overflow: 'visible'
-            }}>
+            <section 
+                className="relative min-h-[90vh] flex items-center text-white px-[6%] pt-[140px] pb-[100px] overflow-visible"
+                style={{
+                    background: 'linear-gradient(135deg, rgba(47,66,62,0.72) 0%, rgba(99,155,179,0.58) 100%), url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80") no-repeat center center/cover',
+                }}
+            >
                 {/* Badge ISO */}
-                <div style={{
-                    position: 'absolute', top: '150px', right: '5%',
-                    backgroundColor: 'rgba(255,255,255,0.92)',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    borderRadius: '14px',
-                    padding: '14px 20px',
-                    display: 'flex', alignItems: 'center', gap: '14px',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-                    border: '1px solid rgba(255,255,255,0.6)',
-                    zIndex: 20
-                }}>
-                    <img src="/about/icontec-badge.png" alt="ICONTEC" style={{ height: '52px', width: 'auto' }} />
+                <div className="absolute top-[140px] right-[5%] glass-premium rounded-2xl py-3.5 px-5 flex items-center gap-3.5 shadow-lg border border-white/60 z-20 hidden md:flex transition-premium hover:scale-[1.02] text-slate-800">
+                    <img src="/about/icontec-badge.png" alt="ICONTEC" className="h-[52px] w-auto" />
                     <div>
-                        <div style={{ fontSize: '1rem', color: '#2f423e', fontWeight: 700, lineHeight: 1.2 }}>Certificación</div>
-                        <div style={{ fontSize: '1.3rem', color: '#f7931b', fontWeight: 800, lineHeight: 1.1 }}>ISO 9001</div>
+                        <div className="text-xs text-slate-500 font-bold uppercase tracking-wider leading-none mb-1">Certificación</div>
+                        <div className="text-lg text-[var(--mjm-orange)] font-extrabold leading-none">ISO 9001</div>
                     </div>
                 </div>
 
                 {/* Logo circular grande - Glass Effect */}
-                <div style={{
-                    position: 'absolute', bottom: '5%', right: '5%',
-                    backgroundColor: 'rgba(255,255,255,0.15)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
-                    borderRadius: '8px',
-                    padding: '12px 40px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
-                    border: '1px solid rgba(255,255,255,0.25)',
-                    opacity: 0.95, 
-                    zIndex: 5
-                }}>
-                    <img src="/logo1.png" alt="MJM Logo decorativo" style={{ height: '260px', width: 'auto' }} />
+                <div className="absolute bottom-[5%] right-[5%] glass-premium-dark rounded-2xl py-3 px-10 flex items-center justify-center shadow-2xl z-5 opacity-90 hidden lg:flex transition-premium hover:scale-[1.01] hover:opacity-100">
+                    <img src="/logo1.png" alt="MJM Logo decorativo" className="h-[240px] w-auto" />
                 </div>
 
                 {/* Texto principal */}
-                <div style={{ maxWidth: '580px', zIndex: 10, position: 'relative' }}>
-                    <h1 style={{ fontSize: '4.2rem', fontWeight: 800, lineHeight: 1.05, marginBottom: '24px', letterSpacing: '-1px' }}>
+                <div className="max-w-[620px] z-10 relative">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
                         Expertos en{' '}
-                        <span style={{ color: 'var(--mjm-orange)', display: 'block' }}>
+                        <span className="text-[var(--mjm-orange)] block font-extrabold tracking-tighter">
                             Aseguramiento Metrológico
                         </span>
                     </h1>
 
-                    <p style={{ fontSize: '1.1rem', lineHeight: 1.7, opacity: 0.9, marginBottom: '42px', maxWidth: '460px' }}>
+                    <p className="text-base md:text-lg leading-relaxed text-white/90 mb-10 max-w-lg font-light">
                         Consultoría, capacitación, verificación y calibración de instrumentos con los más altos estándares de calidad y confiabilidad.
                     </p>
 
-                    <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                        <a href="/contacto" className="btn-primary" style={{
-                            padding: '14px 30px', fontSize: '1rem', display: 'inline-flex',
-                            alignItems: 'center', borderRadius: '8px',
-                            boxShadow: '0 8px 20px rgba(245,130,32,0.4)'
-                        }}>
-                            Contáctanos <ArrowRight size={18} style={{ marginLeft: '8px' }} />
+                    <div className="flex gap-4 flex-wrap">
+                        <a href="/contacto" className="btn-primary shadow-lg shadow-[rgba(245,130,32,0.25)]">
+                            Contáctanos <ArrowRight size={18} className="ml-2" />
                         </a>
-                        <a href="/servicios" style={{
-                            padding: '14px 30px', fontSize: '1rem', borderRadius: '8px',
-                            border: '2px solid rgba(255,255,255,0.6)',
-                            backgroundColor: 'transparent', color: 'white', fontWeight: 600,
-                            transition: 'all 0.3s', display: 'inline-block'
-                        }}
-                            onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
-                            onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}
-                        >
+                        <a href="/servicios" className="px-7 py-3.5 text-base font-semibold border-2 border-white/60 bg-transparent text-white rounded-xl transition-premium hover:bg-white/10 hover:border-white">
                             Nuestros Servicios
                         </a>
                     </div>
@@ -249,28 +208,25 @@ export default function Home() {
             </section>
 
             {/* 2. Nuestro Alcance */}
-            <section style={{ backgroundColor: 'var(--mjm-orange)', color: 'white', padding: '100px 0 80px 0', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ 
-                    position: 'absolute', top: 0, left: 0, right: 0, height: '1px', 
-                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)' 
-                }}></div>
-                <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(80px)', pointerEvents: 'none' }}></div>
+            <section className="relative overflow-hidden bg-[var(--mjm-orange)] text-white py-24 md:py-32">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-[radial-gradient(circle,_rgba(255,255,255,0.12)_0%,_transparent_70%)] rounded-full blur-[80px] pointer-events-none"></div>
 
                 <div className="section-container">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '100px', flexWrap: 'wrap-reverse' }}>
-                        <div style={{ flex: '1 1 480px', position: 'relative' }}>
-                            <div style={{ position: 'relative', height: '520px', borderRadius: '40px', overflow: 'hidden', boxShadow: '0 40px 80px rgba(0,0,0,0.3)' }}>
-                                <Image src={teamImage} alt="Equipo MJM" fill style={{ objectFit: 'cover', objectPosition: 'center top' }} />
-                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 40%)' }}></div>
-                                <div style={{ position: 'absolute', bottom: '40px', left: '40px', right: '40px' }}>
-                                    <div style={{ backgroundColor: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', padding: '25px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                            <div style={{ backgroundColor: 'white', padding: '10px', borderRadius: '12px' }}>
-                                                <Shield size={24} color="var(--mjm-orange)" />
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+                        <div className="lg:col-span-5 relative">
+                            <div className="relative h-[480px] md:h-[540px] rounded-3xl overflow-hidden shadow-2xl shadow-black/20 border border-white/10">
+                                <Image src={teamImage} alt="Equipo MJM" fill className="object-cover object-top" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                                <div className="absolute bottom-6 left-6 right-6">
+                                    <div className="glass-premium rounded-2xl p-6 border border-white/20 shadow-lg text-slate-800">
+                                        <div className="flex items-center gap-4">
+                                            <div className="bg-[var(--mjm-orange)]/10 p-3 rounded-xl">
+                                                <Shield size={24} className="text-[var(--mjm-orange)]" />
                                             </div>
                                             <div>
-                                                <div style={{ fontWeight: 800, fontSize: '1.2rem' }}>Compromiso MJM</div>
-                                                <div style={{ opacity: 1, fontSize: '0.9rem' }}>Calidad certificada en cada proceso.</div>
+                                                <div className="font-extrabold text-lg text-[var(--mjm-blue)]">Compromiso MJM</div>
+                                                <div className="text-slate-500 text-sm font-medium">Calidad certificada en cada proceso.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -278,40 +234,32 @@ export default function Home() {
                             </div>
                         </div>
 
-                        <div style={{ flex: '1 1 500px', zIndex: 10 }}>
-                            <div style={{ 
-                                backgroundColor: '#2f423e', color: 'white', display: 'inline-block', 
-                                padding: '8px 20px', borderRadius: '50px', fontWeight: 800, 
-                                letterSpacing: '2.5px', textTransform: 'uppercase', fontSize: '0.75rem', 
-                                marginBottom: '25px', boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
-                                border: '1px solid rgba(255,255,255,0.1)'
-                            }}>TRAYECTORIA Y CONFIANZA</div>
+                        <div className="lg:col-span-7 flex flex-col justify-center">
+                            <div className="bg-white/15 text-white backdrop-blur-md inline-block self-start px-4 py-1.5 rounded-full font-bold tracking-widest uppercase text-[0.75rem] mb-6 border border-white/10">
+                                TRAYECTORIA Y CONFIANZA
+                            </div>
                             
-                            <h2 style={{ fontSize: '3.8rem', fontWeight: 800, marginBottom: '35px', lineHeight: 1.1, letterSpacing: '-1.5px', color: 'white' }}> 
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-8 leading-[1.1] tracking-tight text-white"> 
                                 Nuestro <br/> 
-                                <span style={{ color: '#e0f2fe', textShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>Alcance</span> 
+                                <span className="text-amber-100 font-black">Alcance</span> 
                             </h2>
                             
-                            <p style={{ fontSize: '1.2rem', lineHeight: 1.7, marginBottom: '50px', color: 'white', fontWeight: 400, maxWidth: '540px', opacity: 0.9 }}> 
+                            <p className="text-lg leading-relaxed mb-10 text-white/90 font-light max-w-2xl"> 
                                 Con más de 12 años de experiencia, Asesorías Integrales MJM S.A.S. se ha consolidado como el aliado estratégico ideal para empresas que buscan la excelencia en sus sistemas de medición.
                             </p>
                             
-                            <div style={{ display: 'grid', gap: '35px' }}>
+                            <div className="grid gap-8">
                                 {[
                                     { num: "01", title: "CONSULTORÍA ISO 9001", desc: "Asesoramos la implementación de sistemas de calidad metrológica bajo los más altos estándares internacionales." },
                                     { num: "02", title: "CRITERIO TÉCNICO", desc: "Nuestros expertos brindan soporte especializado para la toma de decisiones críticas en aseguramiento metrológico." }
                                 ].map((item, idx) => (
-                                    <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '24px' }}>
-                                        <div style={{ 
-                                            backgroundColor: 'white', borderRadius: '12px', padding: '10px 14px', 
-                                            display: 'flex', flexShrink: 0, marginTop: '4px', boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
-                                            color: 'var(--mjm-blue)', fontWeight: 800, fontSize: '1.2rem'
-                                        }}>
+                                    <div key={idx} className="flex gap-6 items-start">
+                                        <div className="bg-white/90 rounded-xl px-3.5 py-2.5 flex items-center justify-center shrink-0 shadow-md text-[var(--mjm-blue)] font-black text-lg">
                                             {item.num}
                                         </div>
                                         <div>
-                                            <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '4px', color: 'white', letterSpacing: '1px' }}>{item.title}</div>
-                                            <div style={{ color: 'white', opacity: 0.85, fontSize: '1rem', lineHeight: 1.5 }}>{item.desc}</div>
+                                            <div className="font-bold text-lg mb-1.5 text-white tracking-wide uppercase">{item.title}</div>
+                                            <div className="text-white/80 leading-relaxed font-light">{item.desc}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -322,58 +270,35 @@ export default function Home() {
             </section>
 
             {/* 3. Portafolio Técnico (Servicios) */}
-            <section style={{ padding: '120px 20px', backgroundColor: 'white', position: 'relative' }}>
-                <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-                    <div style={{ color: 'var(--mjm-orange)', fontWeight: 800, letterSpacing: '3px', fontSize: '0.8rem', marginBottom: '20px', textTransform: 'uppercase' }}>
+            <section className="py-24 md:py-32 bg-slate-50/50 relative">
+                <div className="text-center mb-16 md:mb-24">
+                    <div className="text-[var(--mjm-orange)] font-extrabold tracking-widest text-xs uppercase mb-4">
                         Servicios de Ingeniería
                     </div>
-                    <h2 style={{ fontSize: '4.5rem', fontWeight: 900, color: 'var(--mjm-blue)', marginBottom: '25px', lineHeight: 1.05, letterSpacing: '-2px' }}>
-                        Portafolio<br/>
-                        Técnico
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[var(--mjm-blue)] mb-6 leading-tight tracking-tight">
+                        Portafolio <span className="font-light">Técnico</span>
                     </h2>
                 </div>
 
-                <div className="section-container" style={{ padding: '0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0' }}>
+                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-slate-100 rounded-2xl overflow-hidden bg-white shadow-sm">
                     {services.map((service, idx) => {
                         const Icon = service.icon;
                         return (
-                            <div key={idx} style={{ 
-                                backgroundColor: 'white', 
-                                padding: '50px 40px',
-                                border: '1px solid #f1f5f9',
-                                transition: 'all 0.3s ease',
-                                cursor: 'pointer',
-                                display: 'flex', flexDirection: 'column',
-                                alignItems: 'center',
-                                textAlign: 'center'
-                            }}
+                            <div key={idx} className="group relative bg-white p-10 md:p-12 border-r border-b border-slate-100 flex flex-col items-center text-center cursor-pointer transition-premium hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-200/50 hover:z-10"
                             onClick={() => setSelectedService(service)}
-                            onMouseOver={(e) => {
-                                e.currentTarget.style.boxShadow = '0 20px 40px -15px rgba(0,0,0,0.08)';
-                                e.currentTarget.style.transform = 'translateY(-5px)';
-                                e.currentTarget.style.zIndex = '10';
-                            }}
-                            onMouseOut={(e) => {
-                                e.currentTarget.style.boxShadow = 'none';
-                                e.currentTarget.style.transform = 'none';
-                                e.currentTarget.style.zIndex = '1';
-                            }}
                             >
-                                <div style={{ marginBottom: '30px' }}>
-                                    <Icon size={36} style={{ color: 'var(--mjm-orange)' }} strokeWidth={1.5} />
+                                <div className="mb-8 p-4 rounded-2xl bg-slate-50 transition-premium group-hover:bg-[var(--mjm-orange)]/10">
+                                    <Icon size={32} className="text-[var(--mjm-orange)] transition-premium" strokeWidth={1.5} />
                                 </div>
-                                <h3 style={{ fontSize: '1.25rem', color: 'var(--mjm-blue)', fontWeight: 800, lineHeight: 1.3, textTransform: 'uppercase', marginBottom: '20px', letterSpacing: '1px' }}>
+                                <h3 className="text-base font-extrabold text-[var(--mjm-blue)] tracking-wider uppercase mb-4 group-hover:text-[var(--mjm-orange)] transition-premium">
                                     {service.title}
                                 </h3>
-                                <div style={{ width: '30px', height: '3px', backgroundColor: 'var(--mjm-orange)', marginBottom: '25px' }}></div>
-                                <p style={{ color: '#64748b', fontSize: '1rem', lineHeight: 1.7, flexGrow: 1, marginBottom: '40px' }}>
+                                <div className="w-8 h-[2px] bg-slate-200 group-hover:bg-[var(--mjm-orange)] transition-premium mb-6"></div>
+                                <p className="text-slate-500 font-light leading-relaxed mb-8 text-sm flex-grow">
                                     {service.shortDesc}
                                 </p>
-                                <div style={{ 
-                                    color: 'var(--mjm-orange)', fontWeight: 800, fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase',
-                                    display: 'flex', alignItems: 'center', gap: '8px'
-                                }}>
-                                    DETALLES TÉCNICOS <ArrowRight size={16} strokeWidth={2.5} />
+                                <div className="text-[var(--mjm-orange)] font-bold text-xs tracking-wider uppercase flex items-center gap-2 mt-auto group-hover:translate-x-1 transition-premium">
+                                    DETALLES TÉCNICOS <ArrowRight size={14} strokeWidth={2.5} />
                                 </div>
                             </div>
                         )
@@ -385,20 +310,17 @@ export default function Home() {
             <SaaSSection />
 
             {/* 5. Carrusel Horizontal de Marcas */}
-            <section style={{ padding: '80px 0', backgroundColor: 'white', overflow: 'hidden' }}>
-                <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                    <div style={{ color: 'var(--mjm-orange)', fontWeight: 700, letterSpacing: '2px', fontSize: '0.85rem', marginBottom: '10px' }}>MERCADEO ESTRATÉGICO</div>
-                    <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--mjm-blue)' }}>Marcas Aliadas</h2>
+            <section className="py-20 bg-white border-t border-slate-50 overflow-hidden">
+                <div className="text-center mb-12">
+                    <div className="text-[var(--mjm-orange)] font-bold tracking-widest text-xs uppercase mb-3">MERCADEO ESTRATÉGICO</div>
+                    <h2 className="text-3xl font-extrabold text-[var(--mjm-blue)] tracking-tight">Marcas Aliadas</h2>
                 </div>
                 
-                <div style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
-                    <div className="scroll-container">
+                <div className="relative w-full overflow-hidden">
+                    <div className="scroll-container py-4">
                         {[...brands, ...brands].map((brand, i) => (
-                            <div key={i} className="brand-card">
-                                <img src={brand.logo} alt={brand.name} style={{ maxHeight: '60px', width: 'auto', filter: 'grayscale(100%)', opacity: 0.6, transition: 'all 0.3s' }} 
-                                    onMouseOver={e => { e.currentTarget.style.filter = 'grayscale(0%)'; e.currentTarget.style.opacity = '1'; }}
-                                    onMouseOut={e => { e.currentTarget.style.filter = 'grayscale(100%)'; e.currentTarget.style.opacity = '0.6'; }}
-                                />
+                            <div key={i} className="brand-card transition-premium">
+                                <img src={brand.logo} alt={brand.name} className="max-h-[50px] w-auto filter grayscale opacity-45 transition-premium hover:grayscale-0 hover:opacity-100" />
                             </div>
                         ))}
                     </div>
@@ -407,42 +329,35 @@ export default function Home() {
 
             {/* Modal de Detalle de Servicio */}
             {selectedService && (
-                <div style={{ 
-                    position: 'fixed', inset: 0, backgroundColor: 'rgba(47, 66, 62, 0.4)', 
-                    backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px'
-                }} onClick={() => setSelectedService(null)}>
-                    <div style={{ 
-                        backgroundColor: 'white', borderRadius: '32px', maxWidth: '900px', width: '100%', 
-                        maxHeight: '94vh', overflowY: 'auto', position: 'relative', boxShadow: '0 40px 100px rgba(0,0,0,0.3)',
-                    }} onClick={e => e.stopPropagation()}>
+                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center z-[1000] p-4 transition-premium" onClick={() => setSelectedService(null)}>
+                    <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto relative shadow-2xl border border-slate-100 transition-premium" onClick={e => e.stopPropagation()}>
                         
                         {/* Botón Cerrar */}
                         <button 
                             onClick={() => setSelectedService(null)}
-                            style={{ position: 'absolute', top: '24px', right: '24px', backgroundColor: '#f1f5f9', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10 }}
+                            className="absolute top-6 right-6 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-full w-10 h-10 flex items-center justify-center transition-premium z-10"
                         >
-                            <span style={{ fontSize: '24px', lineHeight: 1, color: '#64748b' }}>&times;</span>
+                            <span className="text-2xl leading-none">&times;</span>
                         </button>
 
-                        <div style={{ padding: '50px' }}>
+                        <div className="p-8 md:p-12">
                             {/* Header Modal */}
-                            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                                <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: 'var(--mjm-blue)', marginBottom: '10px' }}>{selectedService.details?.subtitle || selectedService.title}</h2>
-                                <p style={{ fontSize: '1.1rem', color: '#64748b', maxWidth: '700px', margin: '0 auto' }}>{selectedService.longDesc}</p>
+                            <div className="text-center mb-10">
+                                <h2 className="text-3xl font-extrabold text-[var(--mjm-blue)] mb-4">{selectedService.details?.subtitle || selectedService.title}</h2>
+                                <p className="text-slate-500 font-light max-w-2xl mx-auto leading-relaxed">{selectedService.longDesc}</p>
                             </div>
 
                             {/* Contenido Dinámico según detalles */}
                             {selectedService.details?.cards && (
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '40px' }}>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                                     {selectedService.details.cards.map((card: any, i: number) => {
                                         const CardIcon = [ClipboardCheck, Database, Calendar, BarChart3, Activity, Clock, Thermometer, Ruler, Search, Wrench, ShieldCheck, HeartPulse, Box, Briefcase, Settings, Users][(selectedService.id - 1) * 4 + i] || CheckCircle2;
                                         return (
-                                            <div key={i} style={{ padding: '25px', borderRadius: '20px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', gap: '20px' }}>
-                                                <div style={{ color: 'var(--mjm-orange)', flexShrink: 0 }}><CardIcon size={32} strokeWidth={1.5} /></div>
+                                            <div key={i} className="p-6 rounded-2xl bg-slate-50/50 border border-slate-100 flex gap-5 transition-premium hover:bg-slate-50 hover:border-slate-200">
+                                                <div className="text-[var(--mjm-orange)] shrink-0"><CardIcon size={28} strokeWidth={1.5} /></div>
                                                 <div>
-                                                    <h4 style={{ fontWeight: 800, color: 'var(--mjm-blue)', marginBottom: '5px' }}>{card.title}</h4>
-                                                    <p style={{ fontSize: '0.9rem', color: '#64748b', lineHeight: 1.5 }}>{card.desc}</p>
+                                                    <h4 className="font-bold text-[var(--mjm-blue)] mb-2 text-base">{card.title}</h4>
+                                                    <p className="text-slate-500 font-light text-sm leading-relaxed">{card.desc}</p>
                                                 </div>
                                             </div>
                                         );
@@ -452,19 +367,19 @@ export default function Home() {
 
                             {/* Layout Especial para Capacitación (Imagen + Lista) */}
                             {selectedService.details?.hasMainImage && (
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '40px', marginBottom: '40px', alignItems: 'center' }}>
-                                    <div style={{ borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', height: '100%', minHeight: '350px', position: 'relative' }}>
-                                        <Image src={selectedService.image} alt="Formación" fill style={{ objectFit: 'cover' }} />
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10 items-center">
+                                    <div className="rounded-2xl overflow-hidden shadow-md border border-slate-100 h-64 md:h-80 relative">
+                                        <Image src={selectedService.image} alt="Formación" fill className="object-cover" />
                                     </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                    <div className="flex flex-col gap-6">
                                         {selectedService.details.items.map((item: any, i: number) => {
                                             const ItemIcon = [BookText, GraduationCap, CheckCircle2, UserCheck][i] || CheckCircle2;
                                             return (
-                                                <div key={i} style={{ display: 'flex', gap: '15px' }}>
-                                                    <div style={{ color: 'var(--mjm-orange)' }}><ItemIcon size={24} /></div>
+                                                <div key={i} className="flex gap-4">
+                                                    <div className="text-[var(--mjm-orange)] mt-0.5"><ItemIcon size={20} /></div>
                                                     <div>
-                                                        <h4 style={{ fontWeight: 800, color: 'var(--mjm-blue)', fontSize: '1.05rem', marginBottom: '2px' }}>{item.title}</h4>
-                                                        <p style={{ fontSize: '0.9rem', color: '#64748b' }}>{item.desc}</p>
+                                                        <h4 className="font-bold text-[var(--mjm-blue)] text-base mb-1">{item.title}</h4>
+                                                        <p className="text-slate-500 font-light text-sm leading-relaxed">{item.desc}</p>
                                                     </div>
                                                 </div>
                                             );
@@ -475,32 +390,25 @@ export default function Home() {
 
                             {/* Barra de Certificación ISO 17025 */}
                             {selectedService.details?.certification && (
-                                <div style={{ 
-                                    backgroundColor: 'var(--mjm-orange)', borderRadius: '16px', padding: '20px 30px', 
-                                    color: 'white', display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px',
-                                    boxShadow: '0 10px 25px rgba(247, 147, 27, 0.3)'
-                                }}>
-                                    <div style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '10px', borderRadius: '50%' }}>
+                                <div className="bg-[var(--mjm-orange)] rounded-2xl p-6 text-white flex items-center gap-5 mb-10 shadow-lg shadow-[rgba(247,147,27,0.15)]">
+                                    <div className="bg-white/20 p-3 rounded-full shrink-0">
                                         <ShieldCheck size={28} />
                                     </div>
                                     <div>
-                                        <div style={{ fontWeight: 800, fontSize: '1.1rem' }}>Comprometidos con la Trazabilidad</div>
-                                        <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Nuestros patrones y entregables cumplen con la norma {selectedService.details.certification}</div>
+                                        <div className="font-bold text-lg mb-1">Comprometidos con la Trazabilidad</div>
+                                        <div className="text-white/90 font-light text-sm">Nuestros patrones y entregables cumplen con la norma {selectedService.details.certification}</div>
                                     </div>
                                 </div>
                             )}
 
                             {/* Footer Modal con Botones */}
-                            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', borderTop: '1px solid #f1f5f9', paddingTop: '30px' }}>
-                                <a href="/contacto" className="btn-primary" style={{ padding: '16px 40px', borderRadius: '14px', fontSize: '1.1rem', fontWeight: 700 }}>
+                            <div className="flex gap-4 justify-center border-t border-slate-100 pt-8 flex-wrap">
+                                <a href="/contacto" className="btn-primary py-3 px-8 rounded-xl font-bold">
                                     Solicitar Información
                                 </a>
                                 {selectedService.isSaaS && (
-                                    <a href="/login?tenant=mjm" style={{ 
-                                        padding: '16px 40px', borderRadius: '14px', fontSize: '1.1rem', fontWeight: 700, 
-                                        backgroundColor: '#f1f5f9', border: 'none', color: 'var(--mjm-blue)', display: 'inline-flex', alignItems: 'center', gap: '10px'
-                                    }}>
-                                        Ir al Portal <ArrowRight size={20} />
+                                    <a href="/login?tenant=mjm" className="py-3.5 px-8 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 text-[var(--mjm-blue)] transition-premium inline-flex items-center gap-2">
+                                        Ir al Portal <ArrowRight size={18} />
                                     </a>
                                 )}
                             </div>

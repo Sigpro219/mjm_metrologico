@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { maintenanceService } from "@/services/maintenance";
+import { useTenant } from "@/components/providers/TenantProvider";
 import {
   BarChart3,
   Clock,
@@ -15,14 +16,15 @@ import {
 } from "lucide-react";
 
 export default function MaintenanceMetrics() {
+  const { tenantId } = useTenant();
   // Date Logic (Last 6 Months)
   const today = new Date();
   const start = new Date(today.getFullYear(), today.getMonth() - 5, 1).toISOString();
   const end = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString();
 
   const { data: tickets, isLoading } = useQuery({
-    queryKey: ["maintenance-tickets", "metrics"],
-    queryFn: async () => maintenanceService.getTickets({ startDate: start, endDate: end }),
+    queryKey: ["maintenance-tickets", "metrics", tenantId],
+    queryFn: async () => maintenanceService.getTickets(tenantId || "mjm", { startDate: start, endDate: end }),
   });
 
   if (isLoading)

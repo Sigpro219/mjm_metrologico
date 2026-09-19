@@ -20,12 +20,36 @@
   --mjm-gray: #f4f4f4;
   --mjm-dark-blue: #2f423e;
 
+  /* --- Vite UI Variables (Clinical Light) --- */
+  --primary: #78B7D0;
+  --secondary: #1A202C;
+  --tertiary: #E3A06D;
+  --neutral: #757779;
+  
+  --background: #F8F9FB;
+  --surface: #FFFFFF;
+  --surface-alt: #FAF8FF;
+  --text-main: #1A202C;
+  --text-muted: #757779;
+  --outline-color: rgba(191, 200, 204, 0.3);
+  --sidebar-bg: #1A202C;
+
   --font-family:
-    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    "Outfit", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     
-  --background: #f8fafc;
   --foreground: #0f172a;
+}
+
+.dark {
+  /* --- MODO NOCHE (OBSIDIAN DEEP) --- */
+  --background: #0B1326;
+  --surface: #131B2E;
+  --surface-alt: #171F33;
+  --text-main: #F8F9FB;
+  --text-muted: #94A3B8;
+  --outline-color: rgba(39, 53, 73, 0.6);
+  --sidebar-bg: #070C18;
 }
 
 * {
@@ -39,8 +63,69 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   font-family: var(--font-family);
-  background: var(--mjm-white);
-  color: var(--mjm-blue);
+  background: var(--background);
+  color: var(--text-main);
+  scroll-behavior: smooth;
+}
+
+.font-data {
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Premium Glassmorphism */
+.glass-premium {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-premium-dark {
+  background: rgba(47, 66, 62, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Premium ease-out-expo transition */
+.transition-premium {
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Cards Adaptables */
+.premium-card {
+  background-color: var(--surface);
+  border-radius: 1.5rem;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--outline-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
+}
+
+.premium-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+}
+
+.dark .premium-card {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background-color: var(--surface-alt);
+  color: var(--text-main);
+  border: 1px solid var(--outline-color);
+  padding: 0.75rem 1.75rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-secondary:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
 }
 
 a {
@@ -70,39 +155,43 @@ button {
 }
 
 .btn-primary {
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 14px 28px;
+  border-radius: 10px;
   background-color: var(--mjm-orange);
   color: white;
   border: none;
   font-weight: 600;
-  transition:
-    transform 0.2s,
-    background-color 0.2s;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-primary:hover {
-  background-color: #e67610;
+  background-color: #e58212;
   transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(247, 147, 27, 0.25);
 }
 
 .section-container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 80px 20px;
+  padding: 100px 24px;
 }
 
 /* Hover Zoom Interactive Effects */
 .hover-zoom-container .zoom-image {
   transform: scale(1);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hover-zoom-container:hover .zoom-image {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .hover-zoom-container .zoom-overlay {
   opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 .hover-zoom-container:hover .zoom-overlay {
@@ -125,7 +214,7 @@ button {
   flex-direction: row;
   flex-wrap: nowrap;
   width: max-content;
-  animation: scroll 40s linear infinite;
+  animation: scroll 45s linear infinite;
 }
 
 .scroll-container:hover {
@@ -133,20 +222,38 @@ button {
 }
 
 .brand-card {
-  flex: 0 0 200px;
-  height: 100px;
-  margin: 0 30px;
+  flex: 0 0 180px;
+  height: 90px;
+  margin: 0 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .brand-card:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Scrollbar Adaptable */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(117, 119, 121, 0.35);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mjm-orange, #f7931b);
 }

@@ -111,13 +111,10 @@ export default function Sidebar() {
                      <span className="material-icons text-[18px] mr-3 opacity-80">verified</span>
                      Control de Calidad
                   </Link>
-                  <button 
-                    onClick={() => alert("Módulo de Certificados en desarrollo")}
-                    className={`${subItemClasses} text-white/30 hover:text-white/50 border-transparent text-left`}
-                  >
-                    <span className="material-icons text-[18px] mr-3 opacity-80">workspace_premium</span>
-                    Certificados
-                  </button>
+                  <Link href="/dashboard/ia-lab" className={`${subItemClasses} ${isActive("/dashboard/ia-lab")}`}>
+                     <span className="material-icons text-[18px] mr-3 opacity-80">psychology</span>
+                     Laboratorio IA (Certificados)
+                  </Link>
                 </motion.div>
               )}
             </AnimatePresence>

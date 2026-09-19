@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useNav } from "@/components/providers/NavProvider";
-import { Search, Bell, Menu } from "lucide-react"; // Replaced material-icons to make it visually cleaner if lucide is available. Let's use material-icons to be safe:
+import { Bell, Menu } from "lucide-react"; // Replaced material-icons to make it visually cleaner if lucide is available. Let's use material-icons to be safe:
 
 interface HeaderProps {
   title?: string;
@@ -43,11 +43,7 @@ export default function Header({
       </div>
       
       <div className="flex items-center gap-4 md:gap-6">
-        {/* Placeholder Search Bar */}
-        <div className="hidden md:flex items-center bg-slate-50 border border-slate-200 rounded-full px-4 py-1.5 focus-within:ring-2 focus-within:ring-[color:var(--color-primary)]/20 focus-within:border-[color:var(--color-primary)] transition-all">
-           <span className="material-icons text-slate-400 text-[18px] mr-2">search</span>
-           <input type="text" placeholder="Buscar..." className="bg-transparent border-none outline-none text-sm text-slate-700 placeholder-slate-400 w-48 lg:w-64" />
-        </div>
+
 
         <button className="p-2 text-slate-400 hover:text-[color:var(--color-primary)] bg-slate-50 hover:bg-slate-100 rounded-full transition-all relative">
           <span className="material-icons text-[20px]">notifications</span>
